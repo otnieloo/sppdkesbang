@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered first">
+                            <table class="table table-striped table-bordered first" id="dataTable" >
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -42,8 +42,9 @@ foreach($spt as $d) {
         <td><?php echo $d['dasar']; ?> Pada Tanggal <?php echo $d['tanggal_surat']; ?></td>
         <td><?php echo nl2br(htmlspecialchars_decode($d['untuk'])); ?></td>
        
-        <td style="width: 70px;">
+        <td style="width: 120px;">
                 <a class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo $d['id_spt'];?>" data-popup="tooltip"> <i class="fa fa-times" style="color: white;">  </i> </a>
+                <a class="btn btn-secondary" href="<?php echo base_url().'SuratPerintah/genSPT/'.$d['id_spt']; ?>" > <i class="fa fa-download" style="color: white;">  </i> </a>
         </td>        
     </tr>
 <?php $no++;} ?>

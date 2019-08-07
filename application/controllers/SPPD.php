@@ -1105,8 +1105,8 @@ EOD;
 			'tingkat' => $tingkat
 		);
 		
-		// print_r($data);
-		// $this->CRUD->input_sppd($data);
+		print_r($data);
+		$this->CRUD->input_sppd($data);
 		$this->createPdf($kode_sppd,$no_sppd,$pejabat,$nama_pegawai,$pg_pangkat,$pg_jabatan,$pg_golongan,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$beban_anggaran,$instansi,$id_anggaran,$keterangan);
 
 		// redirect('Excel/buatsurat');

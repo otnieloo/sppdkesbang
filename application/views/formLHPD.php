@@ -22,6 +22,23 @@
                     <?php echo validation_errors('<div class="alert alert-danger style="color: black;">"','</div>') ?>
                     <div class="card-body">
                         <form id="validationform form-validation" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'SuratHasil/tambahhasil'; ?>" method="post" >
+
+                            <div class="form-group row">
+                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan Surat Perintah Tugas :</label>
+                                <div class="col-12 col-sm-8 col-lg-6">
+<!-- input nomor -->
+<select class="form-control" name="id_laporan" required="">
+    <option value="" selected="">Pilih Nomor SPT</option>
+            <!-- Tampilkan data pegawai -->
+            <?php foreach($spt as $d){ ?>
+    <option value="<?php echo $d['id_spt']; ?>"><?php echo $d['no_spt']; ?> </option>
+            <?php } ?>
+            <!-- /Tampilkan data pegawai -->
+</select>
+<!-- end input nomor -->
+                                </div>
+                            </div>
+
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label text-sm-right">Petugas Yang Melaksanakan :</label>
                                 <div class="col-sm-9">

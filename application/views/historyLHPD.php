@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered first">
+                            <table class="table table-striped table-bordered first" id="dataTable" >
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -35,17 +35,18 @@
 <!-- menampilkan data pegawai -->
 <?php 
 $no = 1;
-foreach($spt as $d) {
+foreach($ringkasan as $d) {
 ?>
     <tr>
         <td style="max-width: 50px;"><?php echo $no; ?></td>
-        <td><?php echo $d['petugas']; ?></td>
-        <td><?php echo $d['tujuan']; ?></td>
-        <td><?php echo $d['tgl_berangkat']; ?></td>
+        <td><?php ?></td>
+        <td><?php  ?></td>
+        <td><?php  ?></td>
         <td><?php echo nl2br(htmlspecialchars_decode($d['ringkasan'])); ?></td>
        
         <td style="width: 70px;">
-            <a class="btn btn-danger mx-1" href="<?=base_url()."SuratHasil/hapus/".$d['id'];?>"><i class="fa fa-times" onclick="confirm('Apakah anda yakin?')"> </i>
+            <a class="btn btn-danger mx-1" href="<?=base_url()."SuratHasil/hapus/".$d['id'];?>"><i class="fa fa-times" onclick="confirm('Apakah anda yakin?')"> </i></a>
+            <a class="btn btn-secondary" href="<?php echo base_url().'SuratHasil/genLap/'.$d['id_spt']; ?>" > <i class="fa fa-download" style="color: white;">  </i> </a>
         </td>        
     </tr>
 <?php $no++;} ?>

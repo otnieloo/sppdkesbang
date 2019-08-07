@@ -19,6 +19,7 @@ class SuratHasil extends CI_Controller {
 	public function index()
 	{
 		$data['pegawai'] = $this->CRUD->read_pegawai();
+		$data['spt'] = $this->CRUD->mread_spt();
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('formLHPD',$data);
@@ -28,6 +29,7 @@ class SuratHasil extends CI_Controller {
 	public function history()
 	{
 		$data['spt'] = $this->CRUD->mread_spt();
+		$data['ringkasan'] = $this->CRUD->mread_ringkasan();
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('historyLHPD',$data);
