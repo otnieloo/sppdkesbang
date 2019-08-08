@@ -17,6 +17,23 @@ class CRUD extends CI_Model {
 		// print_r($data);
 	}
 
+	//NYOBA NIH YA GUYS
+	public function multiple_insert_SPPD($input_data_lain, $input_pengikut){
+		$this->db->insert('sppd',$input_data_lain);
+		$id_sppd= $this->db->insert_id();
+		
+
+		//insert ke tabel pengikut
+		$input_pengikut['id_sppd']= $id_sppd;
+		$this->db->insert('pengikut',$input_pengikut);
+		
+		$id_pengikut= $this->db->insert_id();
+		$input_data_lain['id_pengikut']= $id_pengikut;
+
+		return $insert_id = $this->db->insert_id();
+	}
+	//INI AKHIR NYOBA NIH YA GUYS
+
 	public function mhapus_sppd($id){
 		$this->db->where(array('id_sppd' => $id));
 		$this->db->delete('sppd');

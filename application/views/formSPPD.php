@@ -209,7 +209,7 @@
         <?php foreach($pegawai as $d){ ?>
         <div class="col-md-4 my-1">
             <label class="custom-control custom-checkbox">
-<input name="id_pengikut[]" id="id_pengikut" value="<?php echo $d['id_pegawai']; ?>" type="checkbox" class="custom-control-input"><span class="custom-control-label"><?php echo $d['nama']; ?></span>
+<input name="id_pengikut" id="id_pengikut" value="<?php echo $d['id_pegawai']; ?>" type="checkbox" class="custom-control-input"><span class="custom-control-label"><?php echo $d['nama']; ?></span>
             </label>
         </div>
         <?php } ?>
