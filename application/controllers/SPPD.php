@@ -1063,33 +1063,37 @@ EOD;
 
 		$this->load->model('CRUD','crud',TRUE);
 		$input_data_lain = array();
-		$input_pengikut= array();
+		//$input_pengikut= array();
 
-		$input_data_lain['pejabat'] 	= $this->input->post('pejabat');
-		$input_data_lain['id_pegawai'] 	= $this->input->post('id_pegawai');
-		$input_data_lain['maksud'] 		= $this->input->post('maksud');
-		$input_data_lain['alat_angkut'] = $this->input->post('alat_angkut');
+		$input_data_lain['pejabat'] 		= $this->input->post('pejabat');
+		$input_data_lain['id_pegawai'] 		= $this->input->post('id_pegawai');
+		$input_data_lain['maksud'] 			= $this->input->post('maksud');
+		$input_data_lain['alat_angkut'] 	= $this->input->post('alat_angkut');
 		$input_data_lain['tempat_berangkat'] = $this->input->post('tempat_berangkat');
 		$input_data_lain['tempat_tujuan'] 	= $this->input->post('tempat_tujuan');
-		$input_data_lain['lama_dinas'] 	= $this->input->post('lama_dinas');
-		$input_data_lain['tgl_berangkat'] = $this->input->post('tgl_berangkat');
-		$input_data_lain['tgl_kembali'] = $this->input->post('tgl_kembali');
+		$input_data_lain['lama_dinas'] 		= $this->input->post('lama_dinas');
+		$input_data_lain['tgl_berangkat'] 	= $this->input->post('tgl_berangkat');
+		$input_data_lain['tgl_kembali'] 	= $this->input->post('tgl_kembali');
 		//pengikut
-		$input_pengikut['id_pegawai'] 	=  $this->input->post('id_pengikut');
+		//$input_pengikut['id_pengikut'] 		=  $this->input->post('id_pengikut[]');
+		$pengikut 							=$this->input->post('id_pengikut[]');
 		//
 		
-		$input_data_lain['instansi'] 	= $this->input->post('instansi');
+		$input_data_lain['instansi'] 		= $this->input->post('instansi');
 		//anggaran
-		$input_data_lain['id_anggaran'] = $this->input->post('id_anggaran');
+		$input_data_lain['id_anggaran'] 	= $this->input->post('id_anggaran');
 		//
 		$input_data_lain['keterangan'] 		= $this->input->post('keterangan');
-		$input_data_lain['no_sppd'] = $this->input->post('no_sppd');
-		$input_data_lain['kode_sppd'] 	= $this->input->post('kode_sppd');
-		$input_data_lain['tingkat'] 	= $this->input->post('tingkat');
-		$checking_insert = $this->crud->multiple_insert_SPPD($input_data_lain, $input_pengikut);
+		$input_data_lain['no_sppd'] 		= $this->input->post('no_sppd');
+		$input_data_lain['kode_sppd'] 		= $this->input->post('kode_sppd');
+		$input_data_lain['tingkat'] 		= $this->input->post('tingkat');
+		//print_r($input_pengikut);
+		//print_r($pengikut);
+		$checking_insert = $this->crud->multiple_insert_SPPD($input_data_lain, $pengikut);
 		if ($checking_insert) {
 			//kalo sukse
 			redirect(base_url('SPPD/index'));
+			//print_r($checking_insert);
 		} 
 		//var_dump($input_data_lain);
 		//var_dump($input_pengikut);
