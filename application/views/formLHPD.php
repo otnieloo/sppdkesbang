@@ -24,14 +24,14 @@
                         <form id="validationform form-validation" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'SuratHasil/tambahhasil'; ?>" method="post" >
 
                             <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan Surat Perintah Tugas :</label>
+                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan SPPD Nomor :</label>
                                 <div class="col-12 col-sm-8 col-lg-6">
 <!-- input nomor -->
-<select class="form-control" name="id_laporan" required="">
-    <option value="" selected="">Pilih Nomor SPT</option>
+<select class="form-control" name="id_sppd" id="provinsi" required="">
+    <option value="" selected="">Pilih Nomor SPPD</option>
             <!-- Tampilkan data pegawai -->
-            <?php foreach($spt as $d){ ?>
-    <option value="<?php echo $d['id_spt']; ?>"><?php echo $d['no_spt']; ?> </option>
+            <?php foreach($sppd as $d){ ?>
+    <option value="<?php echo $d['id_sppd']; ?>"><?php echo $d['no_sppd']; ?> </option>
             <?php } ?>
             <!-- /Tampilkan data pegawai -->
 </select>
@@ -39,64 +39,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label text-sm-right">Petugas Yang Melaksanakan :</label>
-                                <div class="col-sm-9">
-                                    <div class="custom-controls-stacked">
-                                        <label class="custom-control custom-checkbox">
-                                        <div class="row">
-<!-- input petugas yang melaksanakan -->
-<?php foreach($pegawai as $d){ ?>
-<div class="col-md-4 my-1">
-    <label class="custom-control custom-checkbox">
-    <input name="petugas" value="<?php echo $d['id_pegawai']; ?>" type="checkbox" class="custom-control-input"><span class="custom-control-label"><?php echo $d['nama']; ?></span>
-    </label>
-</div>
-<?php } ?>
-<label class="custom-control custom-checkbox">
-<input type="checkbox" name="petugas" value="Terlampir"  class="custom-control-input"> <span class="custom-control-label">  Terlampir
-<!-- end input petugas yang melaksanakan -->
-                                                    
-                                        </div>
-                                        </label>
-                                         <div id="error-container1"></div>
-                                    </div>
-                                </div>
-                            </div>
-                                        
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Tujuan :</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-<!-- input tujuan -->
-<input name="tujuan" type="text" required="" class="form-control">
-<!-- end input tujuan -->
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Tanggal Berangkat :</label>
-                                <div class="col-8 col-sm-4 col-lg-3 input-group date" id="datetimepicker4" data-target-input="nearest">
-<!-- input tgl berangkat -->
-<input name="tgl_berangkat" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4" />
- <!-- end input tgl berangkat -->
-                                    <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                    </div>
-                                </div>
-                                <span style="color: red;"><?=form_error('tgl_berangkat');?></span>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Tanggal Kembali :</label>
-                                <div class="col-8 col-sm-4 col-lg-3 input-group date" id="datetimepicker41" data-target-input="nearest">
-<!-- input tgl kembali -->
-<input name="tgl_kembali" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker41"  />
-<!-- end input tgl kembali -->
-                                    <div class="input-group-append" data-target="#datetimepicker41" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                    </div>
-                                </div>
-                            </div>
                                         
                             <div class="form-group row">
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Ringkasan Hasil Kegiatan :</label>
@@ -107,27 +49,11 @@
                                 </div>
                              </div>
 
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Pelapor :</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-<!-- input Pelapor -->
-<select name="pelapor" class="selectpicker" required="" >
-    <option value="" >Pilih pegawai</option>
-             <!-- ambil data pegawai -->
-            <?php foreach($pegawai as $d){ ?>
-    <option value="<?php echo $d['nip']; ?> <?=set_value('pelapor') == $d['nip']  ? "selected" :null?>"><?php echo $d['nama']; ?></option>
-            <?php } ?>
-            <!-- /Tampilkan data pegawai -->
-</select>
-        <!-- end input Pelapor -->
-                                </div>
-                            </div>
-
                             <div class="form-group row text-right">
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right"></label>
                                 <div class="col-12 col-sm-8 col-lg-6">
                                                 
-                                    <input type="submit" name="Submit" value="Buat Surat" class="btn btn-block btn-primary" >
+                                    <input type="submit" name="Submit" value="Buat Laporan Hasil" class="btn btn-block btn-primary" >
                                 </div>
                             </div>
                          </form>

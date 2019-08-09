@@ -20,6 +20,7 @@ class SuratHasil extends CI_Controller {
 	{
 		$data['pegawai'] = $this->CRUD->read_pegawai();
 		$data['spt'] = $this->CRUD->mread_spt();
+		$data['sppd'] = $this->CRUD->getSppd();
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('formLHPD',$data);
