@@ -21,7 +21,7 @@
                     <h5 class="card-header">Input Data</h5>
                     <?php echo validation_errors('<div class="alert alert-danger style="color: black;">"','</div>') ?>
                     <div class="card-body">
-                        <form id="validationform form-validation" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'SuratHasil/tambahhasil'; ?>" method="post" >
+                        <form id="validationform form-validation" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'SuratHasil/tambahringkasan'; ?>" method="post" >
 
                             <div class="form-group row">
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan SPPD Nomor :</label>
@@ -39,7 +39,6 @@
                                 </div>
                             </div>
 
-                                        
                             <div class="form-group row">
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Ringkasan Hasil Kegiatan :</label>
                                 <div class="col-12 col-sm-8 col-lg-6">

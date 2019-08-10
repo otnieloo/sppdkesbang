@@ -17,7 +17,8 @@ class CRUD extends CI_Model {
 		// print_r($data);
 	}
 
-	//NYOBA NIH YA GUYS
+	//NYOBA NIH YA GUYS TERNYATA BISA GUYS, JANGAN DELETE YA GUYS
+	//UNTUK MULTIINSERT KE TABLE SPPD DAN PENGIKUT
 	public function multiple_insert_SPPD($input_data_lain, $pengikut){
 		$this->db->insert('sppd',$input_data_lain);
 		$id_sppd= $this->db->insert_id();
@@ -40,7 +41,7 @@ class CRUD extends CI_Model {
 
 		return $insert_id = $this->db->insert_id();
 	}
-	//INI AKHIR NYOBA NIH YA GUYS
+	//INI AKHIR NYOBA NIH YA GUYS 
 
 	public function mhapus_sppd($id){
 		$this->db->where(array('id_sppd' => $id));
