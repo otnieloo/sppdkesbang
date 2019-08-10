@@ -4,6 +4,9 @@
         <!-- end wrapper  -->
         <!-- ============================================================== -->
     </div>
+    </body>
+ 
+</html>
     <!-- ============================================================== -->
     <!-- end main wrapper  -->
     <!-- ============================================================== -->
@@ -115,11 +118,21 @@
     if (charCode > 31 && (charCode < 48 || charCode > 57))
  
     return false;
-    return true;
+    return true;    
 }
 </script>
 
+<!-- Jquery untuk menghilangkan nama pengikut jika sudah dipilih sebagai pegawai -->
+<script>
+    $(document).ready(function(){
+        $("#pengikut :checkbox").each(function(){
+            this.prop('hidden',true);
+        });
+        $("#pegawai").change(function(){
+            var pilihan = this.value;
+            $(':checkbox').removeAttr('disabled');
+            $(':checkbox[value='+pilihan+']').prop('disabled','disabled');
+        });
+    });
+</script>
 
-</body>
- 
-</html>
