@@ -56,7 +56,7 @@
                             <div class="card-body">
                                 <div class="d-inline-block">
                                     <h5 class="text-muted">Total Pegawai</h5>
-                                    <h2 class="mb-0"> 24,763</h2>
+                                    <h2 class="mb-0"> <?php echo $t_pegawai; ?></h2>
                                 </div>
                             <div class="float-right icon-circle-medium  icon-box-lg  bg-primary-light mt-1">
                             <i class="fa fa-user fa-fw fa-sm text-primary"></i>
@@ -69,7 +69,7 @@
                             <div class="card-body">
                                 <div class="d-inline-block">
                                     <h5 class="text-muted">Perjalanan Dinas</h5>
-                                    <h2 class="mb-0"> 10,28,056</h2>
+                                    <h2 class="mb-0"> <?php echo $t_sppd; ?></h2>
                                 </div>
                             <div class="float-right icon-circle-medium  icon-box-lg  bg-info-light mt-1">
                             <i class="fa fa-car fa-fw fa-sm text-info"></i>

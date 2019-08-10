@@ -158,6 +158,28 @@ class CRUD extends CI_Model {
 		$this->db->where(array('id_anggaran' => $id));
 		$this->db->delete('anggaran');
 	}
+	/*==================END TABLE ANGGARAN=============*/
+
+
+	public function totalpegawai(){
+  		$query = $this->db->get('pegawai');
+    	if($query->num_rows()>0){
+      		return $query->num_rows();
+    	}
+    		else{
+      			return 0;
+    	}
+ 	}
+
+ 	public function totalsppd(){
+  		$query = $this->db->get('sppd');
+    	if($query->num_rows()>0){
+      		return $query->num_rows();
+    	}
+    		else{
+      			return 0;
+    	}
+ 	}
 
 
 
