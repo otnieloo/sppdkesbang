@@ -54,8 +54,8 @@ class SuratPerintah extends CI_Controller {
 			'tanggal_surat' => $tanggal_surat		
 			);
 		//print_r($data);
-		// $this->CRUD->minput_spt($data);
-		$this->genSPT($id_sppd,$no_spt,$dasar,$untuk,$tanggal_surat);
+		$this->CRUD->minput_spt($data);
+		//$this->genSPT($id_sppd,$no_spt,$dasar,$untuk,$tanggal_surat);
 		//redirect('Suratspt/index');
 	}
 
