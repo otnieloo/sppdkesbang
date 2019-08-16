@@ -27,7 +27,7 @@
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan SPPD Nomor :</label>
                                 <div class="col-12 col-sm-8 col-lg-6">
 <!-- input nomor -->
-<select class="form-control" name="id_sppd" required="">
+<select class="form-control" name="id_sppd" id="provinsi" required="">
     <option value="" selected="">Pilih Nomor SPPD</option>
             <!-- Tampilkan data pegawai -->
             <?php foreach($sppd as $d){ ?>
@@ -60,7 +60,7 @@
 
                             <div class="form-group row">
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right"> Tanggal Surat:</label>
-                                 <div class="col-8 col-sm-4 col-lg-3 input-group date" id="datetimepicker3" data-target-input="nearest">
+                                 <div class="col-8 col-sm-4 col-lg-3 input-group date" id="" data-target-input="nearest">
 <!-- input tgl kembali -->
 <input name="tanggal_surat" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker3"  />
 <!-- end input tgl kembali -->
@@ -94,3 +94,4 @@
         </div>
            
     </div>
+

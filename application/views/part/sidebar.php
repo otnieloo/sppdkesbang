@@ -133,46 +133,42 @@
                             <li class="nav-divider">
                                 Menu
                             </li>
-                            <li class="nav-item ">
-                                <a class="nav-link active" href="<?=base_url()?>index/index"><i class="fas fa-industry"></i>Dashboard <span class="badge badge-success">6</span></a>
+                            <li class="nav-item">
+                                <a class="nav-link  <?=($this->uri->segment('1')=='index')?'active':''?>" href="<?=base_url()?>index/index"><i class="fas fa-industry"></i>Dashboard</a>
                                 
                             </li>
                             <li class="nav-divider">
-                                Input Data
+                                Input Data/Buat Surat
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-2" aria-controls="submenu-2"><i class="fas fa-envelope"></i>Buat Surat</a>
-                                <div id="submenu-2" class="collapse submenu" style="">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="<?=base_url()?>SPPD/index">SPPD <span class="badge badge-secondary">New</span></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="<?=base_url()?>SuratPerintah/index">Surat Perintah</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="<?=base_url()?>SuratHasil/index">Laporan Hasil</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                             <li class="nav-item ">
+                                <a class="nav-link <?=($this->uri->segment('1')=='SPPD' && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>SPPD/index"><i class="fas fa-envelope"></i>SPPD</a>
+                                
+                            </li>
+                             <li class="nav-item ">
+                                <a class="nav-link <?php if($this->uri->segment('1')=='SuratPerintah'  && $this->uri->segment('2')=='index') { echo "active"; } ?>" href="<?=base_url()?>SuratPerintah/index"><i class="fas fa-envelope"></i>Surat Perintah Tugas</a>
+                                
+                            </li>
+                             <li class="nav-item ">
+                                <a class="nav-link <?=($this->uri->segment('1')=='SuratHasil'  && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>SuratHasil/index"><i class="fas fa-envelope"></i>Laporan Hasil</a>
+                                
                             </li>
                             <li class="nav-divider">
                                 Data
                             </li>
-                            <li class="nav-item <?=($this->uri->segment(1)==='DataPegawai')?'active':''?>">
-                                <a class="nav-link " href="<?=base_url()?>DataPegawai/index"><i class="fas fa-users" title="DataPegawai"></i>Data Pegawai <span class="badge badge-success">6</span></a>
+                            <li class="nav-item ">
+                                <a class="nav-link <?=($this->uri->segment('1')=='DataPegawai' && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>DataPegawai/index"><i class="fas fa-users"></i>Data Pegawai</a>
                                 
                             </li>
                              </li>
-                            <li class="nav-item ">
-                                <a class="nav-link" href="<?=base_url()?>DataAnggaran/index" title="DataAnggaran" ><i class="far fa-money-bill-alt"></i>Data Anggaran<span class="badge badge-success">6</span></a>
+                            <li class="nav-item">
+                                <a class="nav-link <?=($this->uri->segment('1')=='DataAnggaran' && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>DataAnggaran/index" title="DataAnggaran" ><i class="far fa-money-bill-alt"></i>Data Anggaran<span class="badge badge-success">6</span></a>
                                 
                             </li>
                             <li class="nav-divider">
                                History
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-history "></i> History </a>
+                                <a class="nav-link <?=($this->uri->segment('2')=='history')?'active':''?>" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-history "></i> History </a>
                                 <div id="submenu-6" class="collapse submenu" style="">
                                     <ul class="nav flex-column">
                                          <li class="nav-item">

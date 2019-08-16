@@ -14,6 +14,7 @@ class SuratPerintah extends CI_Controller {
 		$this->load->library('Pdf');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
+		$this->load->model('CHAIN');
 	}
 
 	public function index()
@@ -35,6 +36,8 @@ class SuratPerintah extends CI_Controller {
 		$this->load->view('part/footer.php');
 	}
 	
+
+
 
 	public function tambahSP(){
 		$id_sppd = $this->input->post('id_sppd');

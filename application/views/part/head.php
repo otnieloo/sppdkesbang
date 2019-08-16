@@ -18,6 +18,8 @@
      <link rel="stylesheet" href="<?php echo base_url('assets/vendor/font-awesome-animation.min.css');?>">
      <link rel="stylesheet" href="<?php echo base_url('assets/vendor/magic-master/magic.min.css');?>">
      <link rel="stylesheet" href="<?php echo base_url('assets/vendor/magic-master/magic.css');?>">
+     
+    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css');?>">
     <title>SPPD Kesbang Kab. Tasikmalaya</title>
 
 

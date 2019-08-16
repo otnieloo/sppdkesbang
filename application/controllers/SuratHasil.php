@@ -19,6 +19,8 @@ class SuratHasil extends CI_Controller {
 	public function index()
 	{
 		$data['pegawai'] = $this->CRUD->read_pegawai();
+		$data['spt'] = $this->CRUD->mread_spt();
+		$data['sppd'] = $this->CRUD->getSppd();
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('formLHPD',$data);
@@ -28,6 +30,7 @@ class SuratHasil extends CI_Controller {
 	public function history()
 	{
 		$data['spt'] = $this->CRUD->mread_spt();
+		$data['ringkasan'] = $this->CRUD->mread_ringkasan();
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('historyLHPD',$data);
@@ -38,37 +41,22 @@ class SuratHasil extends CI_Controller {
 	public function tambahringkasan(){
 
 		//validasi form
-		
-		$this->form_validation->set_rules('petugas', 'Petugas yang Melaksanakan', 'required');
-		$this->form_validation->set_rules('tujuan', 'Tujuan Perjalanan Dinas', 'required');
-		$this->form_validation->set_rules('tgl_berangkat', 'Tanggal Berangkat', 'required');
-		$this->form_validation->set_rules('tgl_kembali', 'Tanggal Kembali', 'required');
 		$this->form_validation->set_rules('ringkasan', 'Ringkasan Hasil Kegiatan', 'required');
-		$this->form_validation->set_rules('pelapor', 'Pelapor', 'required');
 
 		$this->form_validation->set_message('required', '%s Masih, Kosong Silahkan Isi');
 
-
 		if ($this->form_validation->run() == TRUE) {
-			$petugas = $this->input->post('petugas');
-		$tujuan = $this->input->post('tujuan');
-		$tgl_berangkat = $this->input->post('tgl_berangkat');
-		$tgl_kembali = $this->input->post('tgl_kembali');
-		$ringkasan = $this->input->post('ringkasan');
-		$pelapor = $this->input->post('pelapor');
+			$id_laporan = $this->input->post('id_sppd');
+			$ringkasan = $this->input->post('ringkasan');
  
-		$data = array(
-			'id' => '',
-			'petugas' => $petugas,
-			'tujuan' => $tujuan,
-			'tgl_berangkat' => $tgl_berangkat,
-			'tgl_kembali' => $tgl_kembali,
-			'ringkasan' => $ringkasan,	
-			'pelapor' => $pelapor	
-			);
-		//print_r($data);
-		$this->CRUD->minput_hasil($data);
-		redirect('SuratHasil/index');
+			$data = array(
+				'id_ringkasan' => '',
+				'id_laporan' => $id_laporan,
+				'ringkasan' => $ringkasan
+				);
+			//print_r($data);
+			$this->CRUD->minput_ringkasan($data);
+			redirect('SuratHasil/index');
 		} else {
 			echo"gabisa";
 			$this->index();

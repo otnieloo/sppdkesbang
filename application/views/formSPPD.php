@@ -79,7 +79,7 @@
                                 <div class="col-12 col-sm-8 col-lg-6">
 <!-- input nomor -->
 <select class="form-control" name="tingkat" required="" >
-    <option value="" selected="">Pilih Pejabat</option>
+    <option value="" selected="">Pilih Wilayah</option>
     <option value="Dalam Daerah - Wilayah I">Dalam Daerah - Wilayah I</option>
     <option value="Dalam Daerah - Wilayah II">Dalam Daerah - Wilayah II</option>
     <option value="Dalam Daerah - Wilayah III">Dalam Daerah - Wilayah III</option>
@@ -89,6 +89,9 @@
     <option value="Tempat Lain di Luar Provinsi Jawa Barat, DKI dan Banten">Tempat Lain di Luar Provinsi Jawa Barat, DKI dan Banten</option>
 </select>
 <!-- end input nomor -->
+                                </div>
+                                <div class="col-12 col-sm-2 col-lg-3">
+                                     <a class="btn btn-outline-info btn-xs" data-toggle="modal" data-target="#cekWilayah" data-popup="tooltip"> <p class="text-info">Cek Wilayah </p> </a>
                                 </div>
                             </div>
 
@@ -163,9 +166,9 @@
                                     <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 mb-2">
                                         <label for="validationCustom04">Tanggal Berangkat</label>
             <!-- Date Picker -->
-            <div class=" input-group date" id="datetimepicker4" data-target-input="nearest">
+            <div class=" input-group date" id="" data-target-input="nearest">
 <!-- input tgl kembali -->
-<input name="tgl_berangkat" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4"  />
+<input name="tgl_berangkat" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker4"  />
 <!-- end input tgl kembali -->
                 <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -179,9 +182,9 @@
                                     <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 mb-2">
                                         <label for="validationCustom05">Tanggal Kembali</label>
             <!-- Date Picker -->
-            <div class=" input-group date" id="datetimepicker41" data-target-input="nearest">
+            <div class=" input-group date" id="" data-target-input="nearest">
 <!-- input tgl kembali -->
-<input name="tgl_kembali" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker41"  />
+<input name="tgl_kembali" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker41"  />
  <!-- end input tgl kembali -->
                 <div class="input-group-append" data-target="#datetimepicker41" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -282,3 +285,69 @@
        
     </div>
 </div>
+
+<!-- ================================================= -->
+<!-- Modal Tambah Data -->
+<div class="modal fade" id="cekWilayah" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Input Data Pegawai</h5>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+            </div>
+            <div class="modal-body">
+                <!-- Form Tambah Data Pegawai -->
+                <form id="form" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'DataPegawai/tambah'; ?>" method="post">
+                    <div class="form-group row">
+                        <label for="inputEmail2" class="col-3 col-lg-2 col-form-label text-right">Nama</label>
+                        <div class="col-9 col-lg-10">
+
+<input name="nama" type="text" required="" class="form-control">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword2" class="col-3 col-lg-2 col-form-label text-right">NIP</label>
+                        <div class="col-9 col-lg-10">
+<input name="id_pegawai" type="text" required="" class="filterme form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Pangkat</label>
+                        <div class="col-9 col-lg-10">
+<input name="pangkat" type="text" required="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Golongan</label>
+                        <div class="col-9 col-lg-10">
+<input name="golongan" type="text" required="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Jabatan</label>
+                        <div class="col-9 col-lg-10">
+<input name="jabatan" type="text" required="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Unit Kerja</label>
+                        <div class="col-9 col-lg-10">
+<input name="unit_kerja" type="text"  class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-danger" data-dismiss="modal">Close</a>
+                        <input type="submit" name="Submit" value="Submit" class="btn btn-primary" >
+                    </div>
+                                       
+                </form>
+                <!-- End Form Tambah Data Pegawai -->   
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Modal Tambah Data -->
+<!-- ================================================= -->

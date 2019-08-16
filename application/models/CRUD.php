@@ -17,6 +17,32 @@ class CRUD extends CI_Model {
 		// print_r($data);
 	}
 
+	//NYOBA NIH YA GUYS TERNYATA BISA GUYS, JANGAN DELETE YA GUYS
+	//UNTUK MULTIINSERT KE TABLE SPPD DAN PENGIKUT
+	public function multiple_insert_SPPD($input_data_lain, $pengikut){
+		$this->db->insert('sppd',$input_data_lain);
+		$id_sppd= $this->db->insert_id();
+		
+
+		//insert ke tabel pengikut
+		//$input_pengikut['id_sppd']= $id_sppd;
+		//$this->db->insert('pengikut',$input_pengikut);
+
+		$i=0;
+		foreach ($pengikut as $id_pegawai) {
+			$datapengikut = array(
+				
+				'id_sppd'=>$id_sppd,
+				'id_pegawai'=> $id_pegawai
+			);
+			$this->db->insert('pengikut',$datapengikut);
+			$i++;
+		}
+
+		return $insert_id = $this->db->insert_id();
+	}
+	//INI AKHIR NYOBA NIH YA GUYS 
+
 	public function mhapus_sppd($id){
 		$this->db->where(array('id_sppd' => $id));
 		$this->db->delete('sppd');
@@ -132,6 +158,28 @@ class CRUD extends CI_Model {
 		$this->db->where(array('id_anggaran' => $id));
 		$this->db->delete('anggaran');
 	}
+	/*==================END TABLE ANGGARAN=============*/
+
+
+	public function totalpegawai(){
+  		$query = $this->db->get('pegawai');
+    	if($query->num_rows()>0){
+      		return $query->num_rows();
+    	}
+    		else{
+      			return 0;
+    	}
+ 	}
+
+ 	public function totalsppd(){
+  		$query = $this->db->get('sppd');
+    	if($query->num_rows()>0){
+      		return $query->num_rows();
+    	}
+    		else{
+      			return 0;
+    	}
+ 	}
 
 
 

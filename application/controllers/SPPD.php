@@ -1060,17 +1060,54 @@ EOD;
 
 
 	public function tambahSPPD(){
+
+		$this->load->model('CRUD','crud',TRUE);
+		$input_data_lain = array();
+		//$input_pengikut= array();
+
+		$input_data_lain['pejabat'] 		= $this->input->post('pejabat');
+		$input_data_lain['id_pegawai'] 		= $this->input->post('id_pegawai');
+		$input_data_lain['maksud'] 			= $this->input->post('maksud');
+		$input_data_lain['alat_angkut'] 	= $this->input->post('alat_angkut');
+		$input_data_lain['tempat_berangkat'] = $this->input->post('tempat_berangkat');
+		$input_data_lain['tempat_tujuan'] 	= $this->input->post('tempat_tujuan');
+		$input_data_lain['lama_dinas'] 		= $this->input->post('lama_dinas');
+		$input_data_lain['tgl_berangkat'] 	= $this->input->post('tgl_berangkat');
+		$input_data_lain['tgl_kembali'] 	= $this->input->post('tgl_kembali');
+		//pengikut
+		//$input_pengikut['id_pengikut'] 		=  $this->input->post('id_pengikut[]');
+		$pengikut 							=$this->input->post('id_pengikut[]');
+		//
 		
-		$pejabat = $this->input->post('pejabat');
+		$input_data_lain['instansi'] 		= $this->input->post('instansi');
+		//anggaran
+		$input_data_lain['id_anggaran'] 	= $this->input->post('id_anggaran');
+		//
+		$input_data_lain['keterangan'] 		= $this->input->post('keterangan');
+		$input_data_lain['no_sppd'] 		= $this->input->post('no_sppd');
+		$input_data_lain['kode_sppd'] 		= $this->input->post('kode_sppd');
+		$input_data_lain['tingkat'] 		= $this->input->post('tingkat');
+		//print_r($input_pengikut);
+		//print_r($pengikut);
+		$checking_insert = $this->crud->multiple_insert_SPPD($input_data_lain, $pengikut);
+		if ($checking_insert) {
+			//kalo sukse
+			redirect(base_url('SPPD/index'));
+			//print_r($checking_insert);
+		} 
+		//var_dump($input_data_lain);
+		//var_dump($input_pengikut);
+		
+	/*	$pejabat = $this->input->post('pejabat');
 		$id_pegawai = $this->input->post('id_pegawai');
 		$maksud = $this->input->post('maksud');
 		$alat_angkut = $this->input->post('alat_angkut');
-		$tempat_berangkat = $this->input->post('tempat_berangkat');
+	 	$tempat_berangkat = $this->input->post('tempat_berangkat');
 		$tempat_tujuan = $this->input->post('tempat_tujuan');
 		$lama_dinas = $this->input->post('lama_dinas');
 		$tgl_berangkat = $this->input->post('tgl_berangkat');
-		$tgl_kembali = $this->input->post('tgl_kembali');
-		$id_pengikut = $this->input->post('id_pengikut');
+		$tgl_kembali = $this->input->post('tgl_kembali'); 
+		
 		$beban_anggaran = $this->input->post('beban_anggaran');
 		$instansi = $this->input->post('instansi');
 		$id_anggaran = $this->input->post('id_anggaran');
@@ -1078,12 +1115,11 @@ EOD;
 		$no_sppd = $this->input->post('no_sppd');
 		$kode_sppd = $this->input->post('kode_sppd');
 		$tingkat = $this->input->post('tingkat');
+		//pengikut
+		$id_pengikut = $this->input->post('id_pengikut'); 
 
-		$pegawai2 = $this->CRUD->read_pegawai($id_pegawai);
-		$nama_pegawai = $pegawai2[0]["nama"];
-		$pg_pangkat = $pegawai2[0]["pangkat"];
-		$pg_jabatan = $pegawai2[0]["jabatan"];
-		$pg_golongan = $pegawai2[0]["golongan"];
+
+
 
 		$data = array(
 			'id_sppd' => '',
@@ -1103,11 +1139,11 @@ EOD;
 			'no_sppd' => $no_sppd,
 			'kode_sppd' => $kode_sppd,
 			'tingkat' => $tingkat
-		);
+		); 
 		
-		// print_r($data);
-		// $this->CRUD->input_sppd($data);
-		$this->createPdf($kode_sppd,$no_sppd,$pejabat,$nama_pegawai,$pg_pangkat,$pg_jabatan,$pg_golongan,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$beban_anggaran,$instansi,$id_anggaran,$keterangan);
+		print_r($data);
+		$this->CRUD->input_sppd($data); */
+		// $this->createPdf($kode_sppd,$no_sppd,$pejabat,$nama_pegawai,$pg_pangkat,$pg_jabatan,$pg_golongan,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$beban_anggaran,$instansi,$id_anggaran,$keterangan);
 
 		// redirect('Excel/buatsurat');
 	}	

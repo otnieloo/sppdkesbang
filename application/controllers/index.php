@@ -17,9 +17,11 @@ class index extends CI_Controller {
 
 	public function index()
 	{
+		$data['t_pegawai'] = $this->CRUD->totalpegawai();
+		$data['t_sppd'] = $this->CRUD->totalsppd();
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
-		$this->load->view('index');
+		$this->load->view('index',$data);
 		$this->load->view('part/footer.php');
 	}
 	
