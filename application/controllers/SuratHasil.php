@@ -39,13 +39,6 @@ class SuratHasil extends CI_Controller {
 	
 
 	public function tambahringkasan(){
-
-		//validasi form
-		$this->form_validation->set_rules('ringkasan', 'Ringkasan Hasil Kegiatan', 'required');
-
-		$this->form_validation->set_message('required', '%s Masih, Kosong Silahkan Isi');
-
-		if ($this->form_validation->run() == TRUE) {
 			$id_laporan = $this->input->post('id_sppd');
 			$ringkasan = $this->input->post('ringkasan');
  
@@ -54,16 +47,11 @@ class SuratHasil extends CI_Controller {
 				'id_laporan' => $id_laporan,
 				'ringkasan' => $ringkasan
 				);
-			//print_r($data);
-			$this->CRUD->minput_ringkasan($data);
-			redirect('SuratHasil/index');
-		} else {
-			echo"gabisa";
-			$this->index();
-		}
-		//validasi form end
 
-		
+			$this->genLap($id_laporan,$ringkasan);
+			//print_r($data);
+			// $this->CRUD->minput_ringkasan($data);
+			// redirect('SuratHasil/index');
 	}
 
 	public function updateringkasan($id){
@@ -92,8 +80,17 @@ class SuratHasil extends CI_Controller {
 		redirect('SuratHasil/history');
 	}	
 
-	public function genLap()
+	public function genLap($id_laporan,$ringkasan)
 	{
+		$sppd = $this->CRUD->getSppd($id_laporan);
+		$id_pegawai = array($sppd[0]['id_pegawai']);
+		$id_pengikut = $sppd[0]['id_pengikut'];
+		$id_pengikut2 = explode(",",$id_pengikut);
+		foreach($id_pengikut2 as $peng){
+			array_push($id_pegawai,$peng);
+		}
+		// print_r($id_pegawai);
+		// die;
 		ob_start();
 
 		$pdf = new Pdf('P','mm','F4',true,'UTF-8',false);
@@ -110,28 +107,32 @@ class SuratHasil extends CI_Controller {
 		$pdf->setFont('times','',12);
 		$pdf->Write(10,'Petugas yang melaksanakan perjalanan dinas : ','',false,'L',true);
 
+		$i=1;
+		// print_r($id_pegawai);
+		foreach($id_pegawai as $peg){
+			$data_pegawai = $this->CRUD->read_pegawai($peg);
 
-		for($i=1;$i<=2;$i++){
+
 			$pdf->Cell(5, 0,"",0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(10, 0,"$i.  ",0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'Nama',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'Emma Hernayati, S.IP',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['nama'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'NIP',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'12312312123',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['id_pegawai'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'Jabatan',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'Analisis wawasan kebangsaan',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['jabatan'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'Unit Kerja',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'Kantor Kesbang dan Linmas Kota Tasikmalaya',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['unit_kerja'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Write(5,'','',false,'C',true);
 		}
@@ -142,28 +143,26 @@ class SuratHasil extends CI_Controller {
 		$pdf->Cell(10, 0,'A. ',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(40, 0,'Tujuan',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(5, 0,'Ruang Rapat Aula Wiradadaha Lt.2 Bappeda Kab Tasikmalaya',0, 1, '',false,'',0,false,'T','M');
+		$pdf->Cell(5, 0,$sppd[0]['tempat_tujuan'],0, 1, '',false,'',0,false,'T','M');
 
 		$pdf->Cell(25, 0,'',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(40, 0,'Tanggal Berangkat',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(5, 0,'Senin, 18 Maret 2019',0, 1, '',false,'',0,false,'T','M');
+		$pdf->Cell(5, 0,$sppd[0]['tgl_berangkat'],0, 1, '',false,'',0,false,'T','M');
 
 		$pdf->Cell(25, 0,'',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(40, 0,'Tanggal Kembali',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(5, 0,'Selasa, 19 Maret 2019',0, 1, '',false,'',0,false,'T','M');
+		$pdf->Cell(5, 0,$sppd[0]['tgl_kembali'],0, 1, '',false,'',0,false,'T','M');
 
 		$pdf->Write(5,'','',false,'L',true);
 
 		$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(10, 0,'B.      Ringkasan Hasil Kegiatan :',0, 1, '',false,'',0,false,'T','M');
 
-		for ($i=1; $i <= 3 ; $i++) { 
-			$pdf->Cell(25, 0,'',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,"$i. ",0, 0, '',false,'',0,false,'T','M');
-			$pdf->MultiCell(0, 0, "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit asperiores modi totam velit voluptatibus quod quas, id explicabo tempore impedit!", 0, 'L', false, 1, '', '', true, 0, false, true, 0, 'T', false);
-		}
+		$pdf->Cell(25, 0,'',0, 0, '',false,'',0,false,'T','M');
+		$pdf->Cell(5, 0,"$i. ",0, 0, '',false,'',0,false,'T','M');
+		$pdf->MultiCell(0, 0, $ringkasan, 0, 'L', false, 1, '', '', true, 0, false, true, 0, 'T', false);
 
 		$pdf->Write(5,'','',false,'L',true);
 
@@ -180,12 +179,15 @@ class SuratHasil extends CI_Controller {
 		$pdf->Write(20,'','',false,'L',true);
 
 		$pdf->setFont('times','U',12);
-		$pdf->Cell(120, 0,'',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(10, 0,'EMMA HERMAYATI, S. IP',0, 1, '',false,'',0,false,'T','M');
+		$pdf->Cell(135, 0,'',0, 0, '',false,'',0,false,'T','M');
+		
+		$pelapor = $this->CRUD->read_pegawai($id_pegawai[0]);
+		
+		$pdf->Cell(10, 0,$pelapor[0]['nama'],0, 1, '',false,'',0,false,'T','M');
 
 		$pdf->setFont('times','',12);
-		$pdf->Cell(120, 0,'',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(10, 0,'NIP 12313121312',0, 1, '',false,'',0,false,'T','M');		
+		$pdf->Cell(125, 0,'',0, 0, '',false,'',0,false,'T','M');
+		$pdf->Cell(10, 0,"NIP ".$pelapor[0]['id_pegawai'],0, 1, '',false,'',0,false,'T','M');		
 
 		$pdf->Output('output/contoh.pdf','I');
 	}

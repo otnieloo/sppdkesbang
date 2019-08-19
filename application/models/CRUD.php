@@ -90,7 +90,7 @@ class CRUD extends CI_Model {
 		if ($id === null) {
 			return $this->db->get('spt')->result_array();
 		}else{
-			return $this->db->get_where('spt',array('id_spt'=>$id))->result_array();
+			return $this->db->get_where('spt',array('id_sppd'=>$id))->result_array();
 		}
 	}
 

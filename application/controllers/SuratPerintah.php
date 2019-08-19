@@ -36,9 +36,6 @@ class SuratPerintah extends CI_Controller {
 		$this->load->view('part/footer.php');
 	}
 	
-
-
-
 	public function tambahSP(){
 		$id_sppd = $this->input->post('id_sppd');
 		$no_spt = $this->input->post('no_spt');
@@ -46,8 +43,6 @@ class SuratPerintah extends CI_Controller {
 		$tanggal_surat =  $this->input->post('tanggal_surat');
 		$untuk = $this->input->post('untuk');
 		
-		
- 
 		$data = array(
 			'id_spt' => '',
 			'id_sppd' => $id_sppd,
@@ -57,8 +52,8 @@ class SuratPerintah extends CI_Controller {
 			'tanggal_surat' => $tanggal_surat		
 			);
 		//print_r($data);
-		$this->CRUD->minput_spt($data);
-		//$this->genSPT($id_sppd,$no_spt,$dasar,$untuk,$tanggal_surat);
+		// $this->CRUD->minput_spt($data);
+		$this->genSPT($id_sppd,$no_spt,$dasar,$untuk,$tanggal_surat);
 		//redirect('Suratspt/index');
 	}
 
@@ -68,14 +63,23 @@ class SuratPerintah extends CI_Controller {
 		redirect('SuratPerintah/history');
 	}
 
-	public function genSPT() {
+	public function genSPT($id_sppd,$no_spt,$dasar,$untuk,$tanggal_surat) {
+		$sppd = $this->CRUD->getSppd($id_sppd);
+		$id_pegawai = array($sppd[0]['id_pegawai']);
+		$id_pengikut = $sppd[0]['id_pengikut'];
+		$id_pengikut2 = explode(",",$id_pengikut);
+		foreach($id_pengikut2 as $peng){
+			array_push($id_pegawai,$peng);
+		}
+		// print_r($id_pegawai);
+		// print_r($id_pengikut2);
+		// die;
 		ob_start();
 
 		$pdf = new Pdf('P','mm','F4',true,'UTF-8',false);
 
 		//preparation
-		$image_file = base_url("assets/img/logo-kesbang.jpg");
-		
+		$image_file = base_url("assets/images/logo-kesbang.jpg");
 
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
@@ -94,7 +98,7 @@ class SuratPerintah extends CI_Controller {
       </p>
 EOD;
 
-		$header = <<<EOD
+		$header2 = <<<EOD
       <table>
 		<tr>
 			<th>Nama</th>
@@ -126,7 +130,7 @@ EOD;
 
 		//nomor surat
 		$pdf->setFont('times','',12);
-		$pdf->Write(0,'NOMOR    800      /III/KBL/2019','',false,'C',true);
+		$pdf->Write(0,$no_spt,'',false,'C',true);
 
 		$pdf->Write(15,'','',false,'C',true);
 
@@ -136,7 +140,7 @@ EOD;
 		$pdf->Cell(25, 0,'Dasar',0, 0, '',false,'',0,false,'T','M');
 		$pdf->setFont('times','',12);
 		$pdf->Cell(10, 0,':',0, 0, '',false,'',0,false,'T','M');
-		$pdf->MultiCell(0, 0, "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas non quaerat iste modi architecto hic, impedit assumenda recusandae voluptatum provident nulla facilis molestiae voluptate placeat praesentium, accusamus libero nesciunt. Dolores.", 0, 'J', false, 1, '', '', true, 0, false, true, 0, 'T', false);
+		$pdf->MultiCell(0, 0, $dasar, 0, 'J', false, 1, '', '', true, 0, false, true, 0, 'T', false);
 
 		$pdf->setFont('times','B',12);
 		$pdf->Write(20,'MEMERINTAHKAN','',false,'C',true);
@@ -148,32 +152,37 @@ EOD;
 		$pdf->setFont('times','',12);
 		$pdf->Cell(10, 0,':',0, 0, '',false,'',0,false,'T','M');
 		
-		for($i=1;$i<=4;$i++){
+		$i=1;
+		foreach($id_pegawai as $peg){
 			if ($i!=1) {
 				$pdf->Cell(45, 0,'',0, 0, '',false,'',0,false,'T','M');
 			}
 
+			$data_pegawai = $this->CRUD->read_pegawai($peg);
+			// print_r($data_pegawai);
+
 			$pdf->Cell(5, 0,"$i.  ",0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'Nama',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'Emma Hernayati, S.IP',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['nama'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Cell(50, 0,'',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'NIP',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'12312312123',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['id_pegawai'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Cell(50, 0,'',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'Pangkat/Gol',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'Penata Tk. I, III/d',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['pangkat'].'/'.$data_pegawai[0]['golongan'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Cell(50, 0,'',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(25, 0,'Jabatan',0, 0, '',false,'',0,false,'T','M');
 			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,'Analisis wawasan kebangsaan',0, 1, '',false,'',0,false,'T','M');
+			$pdf->Cell(10, 0,$data_pegawai[0]['jabatan'],0, 1, '',false,'',0,false,'T','M');
 
 			$pdf->Write(5,'','',false,'C',true);
+			$i++;
 		}
 
 		//untuk
@@ -184,7 +193,7 @@ EOD;
 		$pdf->Cell(10, 0,':',0, 0, '',false,'',0,false,'T','M');
 			
 		$pdf->Cell(5, 0,'1.  ',0, 0, '',false,'',0,false,'T','M');
-		$pdf->MultiCell(0, 0, "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas non quaerat iste modi architecto hic, impedit assumenda recusandae voluptatum provident nulla facilis molestiae voluptate placeat praesentium, accusamus libero nesciunt. Dolores.", 0, 'J', false, 1, '', '', true, 0, false, true, 0, 'T', false);	
+		$pdf->MultiCell(0, 0, $untuk, 0, 'J', false, 1, '', '', true, 0, false, true, 0, 'T', false);	
 
 		$pdf->Cell(45, 0,'',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(5, 0,'2.  ',0, 0, '',false,'',0,false,'T','M');
@@ -196,7 +205,7 @@ EOD;
 		$pdf->Cell(40, 0,"Ditetapkan di    : Tasikmalaya",0, 1, 'L',false,'',0,false,'T','C');//Tiba kembali di
 
 		$pdf->Cell(110, 0,"",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(40, 0,"Pada tanggal     : 28 Mei 2016",0, 1, 'L',false,'',0,false,'T','C');// Tanggal kembali
+		$pdf->Cell(40, 0,"Pada tanggal     : ".$tanggal_surat,0, 1, 'L',false,'',0,false,'T','C');// Tanggal kembali
 		$pdf->Write(10,'','',false,'C',true);
 
 		$pdf->Cell(90, 0,"",0, 0, 'L',false,'',0,false,'T','C');
