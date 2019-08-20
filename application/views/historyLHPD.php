@@ -44,9 +44,9 @@ foreach($ringkasan as $d) {
         <td><?php  ?></td>
         <td><?php echo nl2br(htmlspecialchars_decode($d['ringkasan'])); ?></td>
        
-        <td style="width: 70px;">
-            <a class="btn btn-danger mx-1" href="<?=base_url()."SuratHasil/hapus/".$d['id'];?>"><i class="fa fa-times" onclick="confirm('Apakah anda yakin?')"> </i></a>
-            <a class="btn btn-secondary" href="<?php echo base_url().'SuratHasil/genLap/'.$d['id_spt']; ?>" > <i class="fa fa-download" style="color: white;">  </i> </a>
+        <td style="width: 120px;">
+            <a class="btn btn-danger mx-1" href="<?=base_url()."SuratHasil/hapus/".$d['id_ringkasan'];?>"><i class="fa fa-times" onclick="confirm('Apakah anda yakin?')"> </i></a>
+            <a class="btn btn-secondary" href="<?php echo base_url().'SuratHasil/genLap/'.$d['id_ringkasan']; ?>" > <i class="fa fa-download" style="color: white;">  </i> </a>
         </td>        
     </tr>
 <?php $no++;} ?>

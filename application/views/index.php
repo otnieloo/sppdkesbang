@@ -115,12 +115,18 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Fashion E Commerce </td>
-                                                    
-                                                    <td>1,00,000 / 1,50,000</td>
-                                                    <td>70%</td>
-                                                    <td>7 Aug,2018</td>
-                                                    <td>
+                                                    <?php 
+$no = 1;
+foreach($sppd as $d) {
+?>
+    <td><a href="<?php echo base_url().'SPPD/cetakPdf/'.$d['id_sppd']; ?>" style="color: blue;"><?php echo $d['no_sppd']; ?>
+            </a></td>
+    <td>1,00,000 / 1,50,000</td>
+    <td>70%</td>
+    <td>7 Aug,2018</td>
+<?php $no++;} ?>
+    <td>
+
                                                         <div class="dropdown float-right">
                                                             <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
                                                                     <i class="mdi mdi-dots-vertical"></i>

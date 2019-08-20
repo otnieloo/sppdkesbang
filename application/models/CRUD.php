@@ -181,6 +181,25 @@ class CRUD extends CI_Model {
     	}
  	}
 
+ 	public function mread_pengikut($id = null){
+		// print_r($data);
+		if ($id === null) {
+			return $this->db->get('pengikut')->result_array();
+		}else{
+			return $this->db->get_where('pengikut',array('id_pengikut'=>$id))->result_array();
+		}
+	}
+
+	public function join_sppd_pegawai(){
+ 		$this->db->select('*');
+ 		$this->db->from('sppd');
+ 		$this->db->join('pegawai','sppd.id_pegawai=pegawai.id_pegawai');
+ 		$query=$this->db->get();
+ 		return $query->result_array();
+ 	}
+
+ 	
+
 
 
 }

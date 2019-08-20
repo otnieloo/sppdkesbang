@@ -28,6 +28,7 @@ class SPPD extends CI_Controller {
 	public function history()
 	{
 		$data['sppd'] = $this->CRUD->getSppd();
+		$data['join_sppd_pegawai'] = $this->CRUD->join_sppd_pegawai();
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('historySPPD',$data);
@@ -103,13 +104,13 @@ EOD;
 		$text1 = <<<EOD
 		<table>
 			<tr>
-				<td>Lembar Ke</td>
+				<td style="width:120px;">Lembar Ke</td>
 				<td>:</td>
 				<td></td> 
 			</tr>
 			<tr>
-				<td>Kode No</td>
- 				<td>:</td>
+				<td style="width:120px;>Kode No</td>
+ 				<td style="max-width:5px;">:</td>
 				<td>$kode_sppd</td>
 			</tr>
 			<tr>
@@ -140,6 +141,7 @@ EOD;
 		$pdf->Line(57,67.5,153,67.5,array(
 			'width' => 0.7
 		));
+		$pdf->setCellMargins(0,0,0,0); //left,top,right,bottom
 		$pdf->Write(0,'(SPPD)','',false,'C',true);
 		$pdf->Write(5,'','',false,'C',true);
 
@@ -541,6 +543,17 @@ EOD;
 		$pdf->Output('output/contoh.pdf','I');
 	}
 
+	public function formatindo($tgl, $cetak_hari=false){
+		$bulanindo = array( 1 => "Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","November","Desember" );
+		$hariindo = array( 1=> 'Senin', 'Selasa', 'Rabu','Kamis','Jumat', 'Sabtu','Minggu');
+		$split= explode('-', $tgl);
+		$format=$split[2].' '.$bulanindo[(int)$split[1]].' '.$split[0];
+		if ($cetak_hari){
+			$num=date('N', strtotime($tgl));
+			return $hari[$num].', '.$format;
+		} return $format;
+	}
+
 	public function cetakPdf($id)
 	{
 		$data = $this->CRUD->getSppd($id);
@@ -551,8 +564,11 @@ EOD;
 		$tempat_berangkat = $data[0]['tempat_berangkat'];
 		$tempat_tujuan = $data[0]['tempat_tujuan'];
 		$lama_dinas = $data[0]['lama_dinas'];
-		$tgl_berangkat = $data[0]['tgl_berangkat'];
-		$tgl_kembali = $data[0]['tgl_kembali'];
+		$tgl_berangkat2 = $data[0]['tgl_berangkat'];
+			$tgl_berangkat=date('l, d F Y', strtotime($tgl_berangkat2));
+			//$tgl_berangkat= formatindo($tgl_berangkat2, true);
+		$tgl_kembali2 = $data[0]['tgl_kembali'];
+			$tgl_kembali=date('l, d F Y', strtotime($tgl_kembali2));
 		$id_pengikut = $data[0]['id_pengikut'];
 		$instansi = $data[0]['instansi'];
 		$id_anggaran = $data[0]['id_anggaran'];
@@ -563,15 +579,12 @@ EOD;
 
 		$data2 = $this->CRUD->mread_anggaran($id_anggaran);
 		$data3 = $this->CRUD->read_pegawai($id_pegawai);
+
 		$pangkat = $data3[0]['pangkat'];
 		$golongan = $data3[0]['golongan'];
 		$jabatan = $data3[0]['jabatan'];
 		$nama_pegawai = $data3[0]['nama'];
-		$id_pengikut = explode(',', $id_pengikut);
-		foreach ($id_pengikut as $key => $pengikut) {
-			echo "$p$key => $pengikut";
-			# code...
-		}
+		
 		$kode_anggaran = $data2[0]['kode_anggaran'];
 
 		$this->load->library('Pdf');
@@ -610,13 +623,13 @@ EOD;
 			</tr>
 			<tr>
 				<td>Kode No</td>
- 				<td>:</td>
+ 				<td style="max-width= 5px;">:</td>
 				<td>$kode_sppd</td>
 			</tr>
 			<tr>
 				<td>Nomor</td>
-				<td>:</td>
-				<td>$no_sppd</td>
+				<td style="width= 5px;">:</td>
+				<td >$no_sppd</td>
 			</tr>
 		</table>
 
@@ -638,135 +651,123 @@ EOD;
 		//Judul Utama
 		$pdf->setFont('times','B',14);
 		$pdf->Write(10,'SURAT PERINTAH PERJALANAN DINAS','',false,'C',true);
-		$pdf->Line(57,67.5,153,67.5,array(
-			'width' => 0.7
-		));
+		$pdf->Line(57,67.5,153,67.5,array('width' => 0.7)); //garis
+		$pdf->setCellMargins(0,0,0,0);
 		$pdf->Write(0,'(SPPD)','',false,'C',true);
 		$pdf->Write(5,'','',false,'C',true);
 
 		$pdf->setFont('times','',11);
 
-		$pdf->Line(10,82,190,82,array(
-			'width' => 0.2
-		));
+		$pdf->Line(10,82,190,82,array('width' => 0.2)); //garis di atas no.1
 
-		//
-		$pdf->Cell(95, 0,'1.    Pejabat berwenang yang memberi perintah',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$pejabat,0, 1, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0," ",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"KABUPATEN TASIKMALAYA",0, 1, 'L',false,'',0,false,'T','C');
+		//Multicell(width,height,text,border=0,align=J/L/R/C,fill=0,ln=1,x='',y='',reseth=true,stretch=0,ishtml=false,autopading=true,maxh=0)
+		$pdf->Cell(90, 0,'1.    Pejabat berwenang yang memberi perintah',0, 0, '',false,'',0,false,'T','M');
+		$pdf->MultiCell(90, 0,$pejabat, 0, 'J',0,1,'','',true,40,'T');
+		//$pdf->Cell(95, 0," ",0, 0, 'L',false,'',0,false,'T','C');
+		//$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
-		$pdf->Line(10,91.5,190,91.5,array(
-			'width' => 0.2
-		));
+		$pdf->Line(10,91.5,190,91.5,array('width' => 0.2)); //garis di bawah nomer 1
 
 		//Pegawai yang diperintah
 		$pdf->Cell(95, 0,'2.    Nama pegawai yang diperintah',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$nama_pegawai,0, 1, 'L',false,'',0,false,'T','C');//Nama pegawai
+		$pdf->MultiCell(85, 0,$nama_pegawai, 0, 'J',0,1,'','',true,40,'T');//Nama pegawai
 		$pdf->Cell(95, 0," ",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');//NIP
+		$pdf->Cell(95, 0,"NIP. ".$id_pegawai,0, 1, 'L',false,'',0,false,'T','C');//NIP
 
-		$pdf->Line(10,101.5,190,101.5,array(
-			'width' => 0.2
-		));
+		$pdf->Line(10,101.5,190,101.5,array('width' => 0.2)); //garis di bawahn nomer 2
 
 		//Pangkat dan golongan
 		$pdf->Cell(95, 0,'3.    a.   Pangkat dan Golongan menurut PP no 11',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$pangkat,0, 1, 'L',false,'',0,false,'T','C');//Pangkat
+		$pdf->Cell(95, 0,$pangkat.", ".$golongan,0, 1, 'L',false,'',0,false,'T','C');//Pangkat
 		$pdf->Cell(95, 0,"             Tahun 2011",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
-		$pdf->Line(10,111,190,111,array(
-			'width' => 0.2
-		));
+		$pdf->Line(100,111,190,111,array('width' => 0.2 )); //garis di bawah isi no 3a
+
 		$pdf->Cell(95, 0,'       b.   Jabatan/Instansi',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,$jabatan,0, 1, 'L',false,'',0,false,'T','C');//Jabatan
 		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
-		$pdf->Line(10,120.5,190,120.5,array(
-			'width' => 0.2
-		));
+		$pdf->Line(100,120.5,190,120.5,array('width' => 0.2 )); //garis di bawah isi 3b
+
 		$pdf->Cell(95, 0,'       c.   Tingkat menurut peraturan perjalanan',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,$tingkat,0, 1, 'L',false,'',0,false,'T','C');//
 		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
-		$pdf->Line(10,130.5,190,130.5,array(
-			'width' => 0.2
-		));
-		$pdf->Cell(95, 0,'4.   Maksud Perjalanan Dinas',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$maksud,0, 1, 'L',false,'',0,false,'T','C');//Maksud perjalanan dinas (MultiCell)
-		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"Tasikmalaya di Pendopo Baru",0, 1, 'L',false,'',0,false,'T','C');
+		$pdf->Line(10,130.5,190,130.5,array('width' => 0.2 )); //garis di isi bawah 3c
 
-		$pdf->Line(10,140.5,190,140.5,array(
-			'width' => 0.2
-		));
+		$pdf->Cell(95, 0,'4.   Maksud Perjalanan Dinas',0, 0, '',false,'',0,false,'T','M');
+		$pdf->MultiCell(85, 0,$maksud, 0, 'J',0,1,'','',true,40,'T');//Maksud perjalanan dinas (MultiCell)
+		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
+
+		$pdf->Line(10,140.5,190,140.5,array('width' => 0.2)); //garis dibawah no. 4
+
 		$pdf->Cell(95, 0,'5.   Alat angkut yang dipergunakan',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,$alat_angkut,0, 1, 'L',false,'',0,false,'T','C');//Alat angkut
 		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
-		$pdf->Line(100,154.5,190,154.5,array(
-			'width' => 0.2
-		));
+		$pdf->Line(100,154.5,190,154.5,array('width' => 0.2)); //garis buat dibawah isi tempat berangkat 
 		$pdf->Line(10,150,190,150,array(
-			'width' => 0.2
-		));
-		$pdf->Cell(95, 0,'6.     a.    Tempat Berangkat',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$tempat_berangkat,0, 1, 'L',false,'',0,false,'T','C');//Tempat berangkat
-		$pdf->Cell(95, 0,"        b.    Tempat Tujuan",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$tempat_tujuan,0, 1, 'L',false,'',0,false,'T','C');//Tujuan
+		'width' => 0.2)); //garis panjang dibawah nomer 5
 
-		$pdf->Line(100,164.5,190,164.5,array(
+
+		$pdf->Cell(95, 0,'6.     a.    Tempat Berangkat',0, 0, '',false,'',0,false,'T','M');
+		$pdf->MultiCell(85, 0, $tempat_berangkat, 0, 'J',0,1,'','',true,40,'T');//Tempat berangkat
+		$pdf->Cell(95, 0,"        b.    Tempat Tujuan",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->MultiCell(85, 0,$tempat_tujuan, 0, 'J',0,1,'','',true,40,'T');//Tujuan
+		
+		//$pdf->Line(100,164.5,190,164.5,array(
+		//	'width' => 0.2
+		//));
+		//$pdf->Line(100,169.5,190,169.5,array(
+		//	'width' => 0.2
+		//));
+		$pdf->Line(10,164.5,190,164.5,array(
 			'width' => 0.2
-		));
-		$pdf->Line(100,169.5,190,169.5,array(
-			'width' => 0.2
-		));
-		$pdf->Line(10,160,190,160,array(
-			'width' => 0.2
-		));
+		)); //garis panjang dibawah nomer 6
+
 		$pdf->Cell(95, 0,'7.     a.    Lamanya Perjalanan Dinas',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$lama_dinas,0, 1, 'L',false,'',0,false,'T','C');//Lama perjalanan
+		$pdf->Cell(95, 0,$lama_dinas." Hari",0, 1, 'L',false,'',0,false,'T','C');//Lama perjalanan
 		$pdf->Cell(95, 0,"        b.    Tanggal berangkat",0,	 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,$tgl_berangkat,0, 1, 'L',false,'',0,false,'T','C');//Tanggal berangkat
 		$pdf->Cell(95, 0,"        c.    Tanggal harus kembali",0,	 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,$tgl_kembali,0, 1, 'L',false,'',0,false,'T','C');//Tanggal kembali
 
-		$pdf->Line(10,174.5,190,174.5,array(
-			'width' => 0.2
-		));
+		$pdf->Line(100,169.5,190,169.5,array('width' => 0.2 )); //garis di bawah isi hari
+		$pdf->Line(100,174.5,190,174.5,array('width' => 0.2 )); //garis di bawah isi tanggal berangkat
+		$pdf->Line(10,179.5,190,179.5,array('width' => 0.2));//garis panjang dibawah nomer 7
+
+
 		$pdf->Cell(95, 0,'8.   Pengikut',0, 0, '',false,'',0,false,'T','M');
 	
-			$pdf->Cell(95, 0,$pengikut,0, 1, 'L',false,'',0,false,'T','C');//Pengikut
-		$pdf->Cell(95, 0,"NIP",0,	 0, 'L',false,'',0,false,'T','C');
+			$pdf->Cell(95, 0,"pengikutnih",0, 1, 'L',false,'',0,false,'T','C');//Pengikut
 		
 		
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
-		$pdf->Line(100,193.5,190,193.5,array(
+		$pdf->Line(10,189,190,189,array(
 			'width' => 0.2
-		));
-		$pdf->Line(10,184,190,184,array(
-			'width' => 0.2
-		));
+		)); //garis panjang dibawah nomer 8
 		$pdf->Cell(95, 0,'9.   Pembebanan Anggaran',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"      a.   Instansi",0,	 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,$instansi,0, 1, 'L',false,'',0,false,'T','C');//Instansi pembebanan anggaran
 		$pdf->Cell(95, 0,"      b.   Mata Anggaran",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$kode_anggaran,0, 1, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(95, 0,"APBD Kabupaten Tasikmalaya",0, 1, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"1.19.1.19.01. 15.05.5.2.2.15.01",0, 1, 'L',false,'',0,false,'T','C');//Mata anggaran
+		$pdf->Cell(95, 0,$kode_anggaran,0, 1, 'L',false,'',0,false,'T','C');//Mata anggaran
 
-		$pdf->Line(10,203,190,203,array(
-			'width' => 0.2
-		));
-		$pdf->Line(10,210,190,210,array(
-			'width' => 0.2
-		));
+
+		$pdf->Line(100,198.5,190,198.5,array(
+			'width' => 0.2 )); //garis dibawah isi instansi
+		$pdf->Line(10,208.5,190,208.5,array(
+			'width' => 0.2 )); //garis dibawah nomer 9
+		$pdf->Line(10,215.5,190,215.5,array(
+			'width' => 0.2 )); //garis dibawah nomer 10
 
 		$pdf->Cell(95, 0,'10.  Keterangan Lain-lain',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,$keterangan,0, 1, 'L',false,'',0,false,'T','C');//Keterangan
@@ -792,7 +793,7 @@ EOD;
 		$pdf->MultiCell(100, 0, "KEPALA KANTOR KESBANG DAN LINMAS KABUPATEN TASIKMALAYA", 0, 'C', false, 1, '', '', true, 0, false, true, 0, 'T', false);
 
 
-		$image_file = base_url("assets/img/ttd.jpg");
+		$image_file = base_url("assets/images/ttd.jpg");
 		$pdf->Image($image_file, 120, 245, 45, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 		$pdf->setFont('times','U',12);

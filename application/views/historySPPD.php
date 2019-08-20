@@ -35,13 +35,13 @@
 <!-- menampilkan data pegawai -->
 <?php 
 $no = 1;
-foreach($sppd as $d) {
+foreach($join_sppd_pegawai as $d) {
 ?>
     <tr>
         <td style="max-width: 50px;"><?php echo $no; ?></td>
         <td><a href="<?php echo base_url().'SPPD/cetakPdf/'.$d['id_sppd']; ?>" style="color: blue;"><?php echo $d['no_sppd']; ?>
             </a></td>
-        <td><?php echo $d['id_pegawai']; ?></td>
+        <td><?php echo $d['nama']; ?></td>
         <td><?php echo $d['tgl_berangkat']; ?></td>
         <td><?php echo nl2br(htmlspecialchars_decode($d['tempat_tujuan'])); ?></td>
        

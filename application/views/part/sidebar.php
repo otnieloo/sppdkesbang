@@ -130,9 +130,6 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav flex-column">
-                            <li class="nav-divider">
-                                Menu
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link  <?=($this->uri->segment('1')=='index')?'active':''?>" href="<?=base_url()?>index/index"><i class="fas fa-industry"></i>Dashboard</a>
                                 
