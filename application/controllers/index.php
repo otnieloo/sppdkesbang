@@ -20,6 +20,10 @@ class index extends CI_Controller {
 		$data['t_pegawai'] = $this->CRUD->totalpegawai();
 		$data['t_sppd'] = $this->CRUD->totalsppd();
 		$data['sppd'] = $this->CRUD->getSppd();
+<<<<<<< HEAD
+=======
+		$data['m_sppd'] = $this->CRUD;
+>>>>>>> 630dd405d6458b528a52240bef217018d3f8bbcf
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('index',$data);
