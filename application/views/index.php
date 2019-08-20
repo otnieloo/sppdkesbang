@@ -115,12 +115,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <?php
-                                                $no=1; 
-                                                foreach($sppd as $s){ 
-                                            ?>
                                                 <tr>
-<<<<<<< HEAD
                                                     <?php 
 $no = 1;
 foreach($sppd as $d) {
@@ -130,37 +125,6 @@ foreach($sppd as $d) {
     <td>1,00,000 / 1,50,000</td>
     <td>70%</td>
     <td>7 Aug,2018</td>
-<?php $no++;} ?>
-    <td>
-
-                                                        <div class="dropdown float-right">
-                                                            <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
-                                                                    <i class="mdi mdi-dots-vertical"></i>
-                                                                         </a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <!-- item-->
-                                                                <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                                                <!-- item-->
-                                                                <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                                                <!-- item-->
-                                                                <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                                                <!-- item-->
-                                                                <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                                            </div>
-                                                        </div>
-=======
-                                                    <td><?= $no?></td>
-                                                    <td><?= $s['no_sppd'];?></td>
-                                                    <?php  
-                                                        $spt = $m_sppd->mread_spt($s['id_sppd']);
-                                                        
-                                                    ?>
-                                                    <td><?= $spt[0]['no_spt'];?></td>
-                                                    <td></td>
-                                                    <td><?= $s['tgl_berangkat']; ?></td>
-                                                    <td>
->>>>>>> 630dd405d6458b528a52240bef217018d3f8bbcf
-                                                    </td>
                                                 </tr>
                                             <?php $no++;}?>
                                             </tbody>
