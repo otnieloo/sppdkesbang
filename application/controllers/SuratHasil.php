@@ -16,7 +16,7 @@ class SuratHasil extends CI_Controller {
 		$this->load->library('form_validation');
 	}
 
-	public function index()
+	public function index($id_sppd = null)
 	{
 		$data['pegawai'] = $this->CRUD->read_pegawai();
 		$data['spt'] = $this->CRUD->mread_spt();
@@ -29,8 +29,10 @@ class SuratHasil extends CI_Controller {
 
 	public function history()
 	{
-		$data['spt'] = $this->CRUD->mread_spt();
-		$data['ringkasan'] = $this->CRUD->mread_ringkasan();
+		$data['laporan'] = $this->CRUD->mread_laporan();
+		$data['m_sppd'] = $this->CRUD;
+		// print_r($data);
+		// die;
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
 		$this->load->view('historyLHPD',$data);
@@ -38,51 +40,29 @@ class SuratHasil extends CI_Controller {
 	}
 	
 
-	public function tambahringkasan(){
-			$id_laporan = $this->input->post('id_sppd');
-			$ringkasan = $this->input->post('ringkasan');
+	public function tambahLaporan(){
+			$sppd = $this->input->post('id_sppd');
+			$hasil = $this->input->post('hasil');
  
 			$data = array(
-				'id_ringkasan' => '',
-				'id_laporan' => $id_laporan,
-				'ringkasan' => $ringkasan
+				'id_laporan' => null,
+				'id_sppd' => $sppd,
+				'hasil' => $hasil
 				);
-
-			$this->genLap($id_laporan,$ringkasan);
 			//print_r($data);
-			// $this->CRUD->minput_ringkasan($data);
+			$this->CRUD->minput_laporan($data);
+			$this->genLap($sppd,$hasil);
 			// redirect('SuratHasil/index');
 	}
 
-	public function updateringkasan($id){
-		$petugas =  $this->input->post('petugas');
-		$tujuan = $this->input->post('tujuan');
-		$tgl_berangkat = $this->input->post('tgl_berangkat');
-		$tgl_kembali = $this->input->post('tgl_kembali');
-		$ringkasan = $this->input->post('ringkasan');
-		$pelapor = $this->input->post('pelapor');
-
-		$data = array(
-			'petugas' => $petugas,
-			'tujuan' => $tujuan,
-			'tgl_berangkat' => $tgl_berangkat,
-			'tgl_kembali' => $tgl_kembali,
-			'ringkasan' => $ringkasan,
-			'pelapor' => $pelapor
-		);
-
-		$this->CRUD->mupdate_ringkasan($id,$data);
-		redirect('SuratHasil/index');
+	public function hapus($id){
+		$this->CRUD->mhapus_laporan($id);
+		redirect('SuratHasil/history');
 	}
 
-	public function hapus($id){
-		$this->CRUD->mhapus_ringkasan($id);
-		redirect('SuratHasil/history');
-	}	
-
-	public function genLap($id_laporan,$ringkasan)
+	public function genLap($sppd,$hasil)
 	{
-		$sppd = $this->CRUD->getSppd($id_laporan);
+		$sppd = $this->CRUD->getSppd($sppd);
 		$id_pegawai = array($sppd[0]['id_pegawai']);
 		$id_pengikut = $sppd[0]['id_pengikut'];
 		$id_pengikut2 = explode(",",$id_pengikut);
@@ -162,7 +142,7 @@ class SuratHasil extends CI_Controller {
 
 		$pdf->Cell(25, 0,'',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(5, 0,"$i. ",0, 0, '',false,'',0,false,'T','M');
-		$pdf->MultiCell(0, 0, $ringkasan, 0, 'L', false, 1, '', '', true, 0, false, true, 0, 'T', false);
+		$pdf->MultiCell(0, 0, $hasil, 0, 'L', false, 1, '', '', true, 0, false, true, 0, 'T', false);
 
 		$pdf->Write(5,'','',false,'L',true);
 

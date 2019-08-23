@@ -292,55 +292,59 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Data Wilayah</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Input Data Pegawai</h5>
                 <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </a>
             </div>
             <div class="modal-body">
                 <!-- Form Tambah Data Pegawai -->
-                <table class="table">
-                    <center><h5>Dalam Daerah</h5></center>
-                    <thead>
-                        <tr class="border-0">
-                            <th class="border-0">Wilayah 1</th>
-                            <th class="border-0">Wilayah 2</th>
-                            <th class="border-0">Wilayah 3</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Fashion E Commerce </td>
-                                                    
-                            <td>1,00,000 / 1,50,000</td>
-                            <td>70%</td>
-                        </tr>
-                                                
-                    </tbody>
-                </table>
-                <hr><hr>
-                <table class="table">
-                    <center><h5>Luar Daerah</h5></center>
-                    <thead>
-                        <tr class="border-0">
-                            <th class="border-0">Wilayah 1</th>
-                            <th class="border-0">Wilayah 2</th>
-                            <th class="border-0">Wilayah 3</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Fashion E Commerce </td>
-                                                    
-                            <td>1,00,000 / 1,50,000</td>
-                            <td>70%</td>
-                        </tr>
-                                                
-                    </tbody>
-                </table>
-            </div>
-             <div class="modal-footer">
-                              
+                <form id="form" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'DataPegawai/tambah'; ?>" method="post">
+                    <div class="form-group row">
+                        <label for="inputEmail2" class="col-3 col-lg-2 col-form-label text-right">Nama</label>
+                        <div class="col-9 col-lg-10">
+
+<input name="nama" type="text" required="" class="form-control">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword2" class="col-3 col-lg-2 col-form-label text-right">NIP</label>
+                        <div class="col-9 col-lg-10">
+<input name="id_pegawai" type="text" required="" class="filterme form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Pangkat</label>
+                        <div class="col-9 col-lg-10">
+<input name="pangkat" type="text" required="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Golongan</label>
+                        <div class="col-9 col-lg-10">
+<input name="golongan" type="text" required="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Jabatan</label>
+                        <div class="col-9 col-lg-10">
+<input name="jabatan" type="text" required="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                         <label for="inputWebSite" class="col-3 col-lg-2 col-form-label text-right">Unit Kerja</label>
+                        <div class="col-9 col-lg-10">
+<input name="unit_kerja" type="text"  class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-danger" data-dismiss="modal">Close</a>
+                        <input type="submit" name="Submit" value="Submit" class="btn btn-primary" >
+                    </div>
+                                       
+                </form>
+                <!-- End Form Tambah Data Pegawai -->   
             </div>
         </div>
     </div>

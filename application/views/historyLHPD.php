@@ -35,18 +35,22 @@
 <!-- menampilkan data pegawai -->
 <?php 
 $no = 1;
-foreach($ringkasan as $d) {
+foreach($laporan as $d) {
 ?>
     <tr>
-        <td style="max-width: 50px;"><?php echo $no; ?></td>
-        <td><?php ?></td>
-        <td><?php  ?></td>
-        <td><?php  ?></td>
-        <td><?php echo nl2br(htmlspecialchars_decode($d['ringkasan'])); ?></td>
+        <td><?php echo $no; ?></td>
+        <?php 
+            $sppd = $m_sppd->getSppd($d['id_sppd']); 
+            $petugas = $m_sppd->read_pegawai($sppd[0]['id_pegawai']);
+        ?>
+        <td><?php echo  $petugas[0]['nama'];?></td>
+        <td><?php echo $sppd[0]['tempat_tujuan']; ?></td>
+        <td><?php echo $sppd[0]['tempat_berangkat']; ?></td>
+        <td><?php echo $d['hasil'];?></td>
        
-        <td style="width: 120px;">
-            <a class="btn btn-danger mx-1" href="<?=base_url()."SuratHasil/hapus/".$d['id_ringkasan'];?>"><i class="fa fa-times" onclick="confirm('Apakah anda yakin?')"> </i></a>
-            <a class="btn btn-secondary" href="<?php echo base_url().'SuratHasil/genLap/'.$d['id_ringkasan']; ?>" > <i class="fa fa-download" style="color: white;">  </i> </a>
+        <td style="width: 70px;">
+            <a class="btn btn-danger mx-1" href="<?=base_url()."SuratHasil/hapus/".$d['id_laporan'];?>"><i class="fa fa-times" onclick="confirm('Apakah anda yakin?')"> </i></a>
+            <a class="btn btn-secondary" href="<?php echo base_url().'SuratHasil/genLap/'.$d['id_laporan']; ?>" > <i class="fa fa-download" style="color: white;">  </i> </a>
         </td>        
     </tr>
 <?php $no++;} ?>

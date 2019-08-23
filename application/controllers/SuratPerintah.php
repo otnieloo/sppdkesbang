@@ -5,7 +5,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // use 
 
-
 class SuratPerintah extends CI_Controller {
 	public function __construct(){
 		parent::__construct();		
@@ -17,14 +16,25 @@ class SuratPerintah extends CI_Controller {
 		$this->load->model('CHAIN');
 	}
 
-	public function index()
-	{
+	public function index($id = null)
+	{	
+
 		$data['pegawai'] = $this->CRUD->read_pegawai();
 		$data['sppd'] = $this->CRUD->getSppd();
-		$this->load->view('part/head');
-		$this->load->view('part/sidebar');
-		$this->load->view('formSP',$data);
-		$this->load->view('part/footer.php');
+		$data['m_sppd'] = $this->CRUD;
+		if($id === null){
+			$this->load->view('part/head');
+			$this->load->view('part/sidebar');
+			$this->load->view('formSP',$data);
+			$this->load->view('part/footer.php');	
+		}else{
+			$data['id_sppd'] = $id;
+			$this->load->view('part/head');
+			$this->load->view('part/sidebar');
+			$this->load->view('formSP',$data);
+			$this->load->view('part/footer.php');
+		}
+		
 	}
 
 	public function history()
@@ -44,15 +54,15 @@ class SuratPerintah extends CI_Controller {
 		$untuk = $this->input->post('untuk');
 		
 		$data = array(
-			'id_spt' => '',
+			'id_spt' => NULL,
 			'id_sppd' => $id_sppd,
 			'no_spt' => $no_spt,
 			'dasar' => $dasar,
 			'untuk' => $untuk,
 			'tanggal_surat' => $tanggal_surat		
 			);
-		//print_r($data);
-		// $this->CRUD->minput_spt($data);
+		// print_r($data);
+		$this->CRUD->minput_spt($data);
 		$this->genSPT($id_sppd,$no_spt,$dasar,$untuk,$tanggal_surat);
 		//redirect('Suratspt/index');
 	}

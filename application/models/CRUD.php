@@ -105,30 +105,30 @@ class CRUD extends CI_Model {
 	}
 
 
-/*==================TABLE RINGKASAN=============*/
-	public function minput_ringkasan($data){
-		$this->db->insert('ringkasan',$data);
+/*==================TABLE LAPORAN=============*/
+	public function minput_laporan($data){
+		$this->db->insert('laporan',$data);
 		return $this->db->affected_rows();
 		// print_r($data);
 	}
 
-	public function mread_ringkasan($id = null){
+	public function mread_laporan($id = null){
 		// print_r($data);
 		if ($id === null) {
-			return $this->db->get('ringkasan')->result_array();
+			return $this->db->get('laporan')->result_array();
 		}else{
-			return $this->db->get_where('ringkasan',array('id_ringkasan'=>$id))->result_array();
+			return $this->db->get_where('laporan',array('id_sppd'=>$id))->result_array();
 		}
 	}
 
-	public function mupdate_ringkasan($id,$data){
-		$this->db->where(array('id_ringkasan' => $id));
-		$this->db->update('ringkasan',$data);
+	public function mupdate_laporan($id,$data){
+		$this->db->where(array('id_laporan' => $id));
+		$this->db->update('laporan',$data);
 	}
 
-	public function mhapus_ringkasan($id){
-		$this->db->where(array('id_ringkasan' => $id));
-		$this->db->delete('ringkasan');
+	public function mhapus_laporan($id){
+		$this->db->where(array('id_laporan' => $id));
+		$this->db->delete('laporan');
 	}
 
 
@@ -180,25 +180,6 @@ class CRUD extends CI_Model {
       			return 0;
     	}
  	}
-
- 	public function mread_pengikut($id = null){
-		// print_r($data);
-		if ($id === null) {
-			return $this->db->get('pengikut')->result_array();
-		}else{
-			return $this->db->get_where('pengikut',array('id_pengikut'=>$id))->result_array();
-		}
-	}
-
-	public function join_sppd_pegawai(){
- 		$this->db->select('*');
- 		$this->db->from('sppd');
- 		$this->db->join('pegawai','sppd.id_pegawai=pegawai.id_pegawai');
- 		$query=$this->db->get();
- 		return $query->result_array();
- 	}
-
- 	
 
 
 

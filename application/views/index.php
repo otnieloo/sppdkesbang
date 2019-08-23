@@ -83,7 +83,7 @@
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Top Folllowes by Locations </h5>
+                            <h5 class="card-header">Top Followers by Locations </h5>
                                 <div class="card-body">
                                 <canvas id="chartjs_bar_horizontal"></canvas>
                                 </div>
@@ -115,16 +115,40 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                            <?php
+                                                $no=1; 
+                                                foreach($sppd as $s){ 
+                                            ?>
                                                 <tr>
-                                                    <?php 
-$no = 1;
-foreach($sppd as $d) {
-?>
-    <td><a href="<?php echo base_url().'SPPD/cetakPdf/'.$d['id_sppd']; ?>" style="color: blue;"><?php echo $d['no_sppd']; ?>
-            </a></td>
-    <td>1,00,000 / 1,50,000</td>
-    <td>70%</td>
-    <td>7 Aug,2018</td>
+                                                    <td><?= $no?></td>
+                                                    <td><a href="<?php echo base_url("SPPD/cetakPdf/{$s['id_sppd']}") ?>"><?= $s['no_sppd'];?></a></td>
+                                                    <?php  
+                                                        $spt = $m_sppd->mread_spt($s['id_sppd']);  
+                                                    ?>
+                                                    <td>
+                                                    	<?php 
+                                                    		if(isset($spt[0]['no_spt'])){
+                                                    			echo $spt[0]['no_spt'];
+                                                    		}else{
+                                                    			echo "Belum ada";
+                                                    		}
+                                                    	?>
+                                                    </td>
+                                                    <?php  
+                                                        $laporan = $m_sppd->mread_laporan($s['id_sppd']);  
+                                                    ?>
+                                                    <td>
+                                                    	<?php 
+                                                    		if(isset($laporan[0]['id_laporan'])){
+                                                    			echo $laporan[0]['id_laporan'];
+                                                    		}else{
+                                                    			echo "Belum ada";
+                                                    		}
+                                                    	?>
+                                                    </td>
+                                                    <td><?= $s['tgl_berangkat']; ?></td>
+                                                    <td>
+                                                    </td>
                                                 </tr>
                                             <?php $no++;}?>
                                             </tbody>

@@ -1,5 +1,5 @@
 <!-- wrapper  -->
-<!-- =============================================== -->
+    <!-- =============================================== -->
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
         <!-- ======================================= -->
@@ -27,14 +27,25 @@
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan SPPD Nomor :</label>
                                 <div class="col-12 col-sm-8 col-lg-6">
 <!-- input nomor -->
+<?php if(isset($id_sppd)){ ?>
+    <p><?php echo "yes"; ?></p>
+<select class="form-control" name="id_sppd" id="provinsi" required="">
+    <option value="<?php echo $id_sppd ?>" disabled="disabled"><?= $id_sppd?></option>
+</select>
+<?php }else{ ?>
 <select class="form-control" name="id_sppd" id="provinsi" required="">
     <option value="" selected="">Pilih Nomor SPPD</option>
-            <!-- Tampilkan data pegawai -->
-            <?php foreach($sppd as $d){ ?>
-    <option value="<?php echo $d['id_sppd']; ?>"><?php echo $d['no_sppd']; ?> </option>
-            <?php } ?>
+        <!-- Tampilkan data pegawai -->
+            <?php 
+            foreach($sppd as $d){ 
+            $spt = $this->CRUD->mread_spt($d['id_sppd']);
+            echo($spt);
+            if($spt == null){?>
+                <option value="<?php echo $d['id_sppd']; ?>"><?php echo $d['no_sppd']; ?> </option>
+            <?php }} ?>
             <!-- /Tampilkan data pegawai -->
 </select>
+<?php } ?>
 <!-- end input nomor -->
                                 </div>
                             </div>
@@ -62,7 +73,7 @@
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right"> Tanggal Surat:</label>
                                  <div class="col-8 col-sm-4 col-lg-3 input-group date" id="" data-target-input="nearest">
 <!-- input tgl kembali -->
-<input name="tanggal_surat" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker3"  />
+<input name="tanggal_surat" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker3"  />
 <!-- end input tgl kembali -->
                                 <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>

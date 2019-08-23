@@ -21,7 +21,7 @@
                     <h5 class="card-header">Input Data</h5>
                     <?php echo validation_errors('<div class="alert alert-danger style="color: black;">"','</div>') ?>
                     <div class="card-body">
-                        <form id="validationform form-validation" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'SuratHasil/tambahringkasan'; ?>" method="post" >
+                        <form id="validationform form-validation" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'SuratHasil/tambahLaporan'; ?>" method="post" >
 
                             <div class="form-group row">
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan SPPD Nomor :</label>
@@ -30,9 +30,13 @@
 <select class="form-control" name="id_sppd" id="provinsi" required="">
     <option value="" selected="">Pilih Nomor SPPD</option>
             <!-- Tampilkan data pegawai -->
-            <?php foreach($sppd as $d){ ?>
-    <option value="<?php echo $d['id_sppd']; ?>"><?php echo $d['no_sppd']; ?> </option>
-            <?php } ?>
+            <?php 
+            foreach($sppd as $d){ 
+            $sp = $this->CRUD->mread_laporan($d['id_sppd']);
+            echo($sp);
+            if($sp == null){?>
+                <option value="<?php echo $d['id_sppd']; ?>"><?php echo $d['no_sppd']; ?> </option>
+            <?php }} ?>
             <!-- /Tampilkan data pegawai -->
 </select>
 <!-- end input nomor -->
@@ -43,7 +47,7 @@
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Ringkasan Hasil Kegiatan :</label>
                                 <div class="col-12 col-sm-8 col-lg-6">
  <!-- input Ringkasan Hasil Kegiatan -->
-<textarea name="ringkasan" required="" class="form-control" rows="8"></textarea>
+<textarea name="hasil" required="" class="form-control" rows="8"></textarea>
  <!-- end input Ringkasan Hasil Kegiatan -->
                                 </div>
                              </div>
