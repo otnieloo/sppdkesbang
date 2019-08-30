@@ -16,15 +16,23 @@ class SuratHasil extends CI_Controller {
 		$this->load->library('form_validation');
 	}
 
-	public function index($id_sppd = null)
+	public function index($id = null)
 	{
 		$data['pegawai'] = $this->CRUD->read_pegawai();
 		$data['spt'] = $this->CRUD->mread_spt();
 		$data['sppd'] = $this->CRUD->getSppd();
-		$this->load->view('part/head');
-		$this->load->view('part/sidebar');
-		$this->load->view('formLHPD',$data);
-		$this->load->view('part/footer.php');
+		if($id === null){
+			$this->load->view('part/head');
+			$this->load->view('part/sidebar');
+			$this->load->view('formLHPD',$data);
+			$this->load->view('part/footer.php');	
+		}else{
+			$data['id_sppd'] = $id;
+			$this->load->view('part/head');
+			$this->load->view('part/sidebar');
+			$this->load->view('formLHPD',$data);
+			$this->load->view('part/footer.php');
+		}
 	}
 
 	public function history()

@@ -28,9 +28,8 @@
                                 <div class="col-12 col-sm-8 col-lg-6">
 <!-- input nomor -->
 <?php if(isset($id_sppd)){ ?>
-    <p><?php echo "yes"; ?></p>
 <select class="form-control" name="id_sppd" id="provinsi" required="">
-    <option value="<?php echo $id_sppd ?>" disabled="disabled"><?= $id_sppd?></option>
+    <option value="<?php echo $id_sppd ?>"      selected="selected"><?= $id_sppd?></option>
 </select>
 <?php }else{ ?>
 <select class="form-control" name="id_sppd" id="provinsi" required="">

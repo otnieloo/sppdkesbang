@@ -8,7 +8,7 @@
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="<?=base_url()?>index/index">  <img src="<?php echo base_url(). 'assets/images/logo-kesbang2.png'; ?>" height="50" width="50">SPPD<span style="font-size: 30%;" >Kesbang Kab. Tasikmalaya<span></a>
+                <a class="navbar-brand" href="<?=base_url()?>index">  <img src="<?php echo base_url(). 'assets/images/logo-kesbang2.png'; ?>" height="50" width="50">SPPD<span style="font-size: 30%;" >Kesbang Kab. Tasikmalaya<span></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -134,7 +134,7 @@
                                 Menu
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  <?=($this->uri->segment('1')=='index')?'active':''?>" href="<?=base_url()?>index/index"><i class="fas fa-industry"></i>Dashboard</a>
+                                <a class="nav-link  <?=($this->uri->segment('1')=='index')?'active':''?>" href="<?=base_url()?>index/"><i class="fas fa-industry"></i>Dashboard</a>
                                 
                             </li>
                             <li class="nav-divider">
@@ -182,6 +182,18 @@
                                         </li>
                                     </ul>
                                 </div>
+                            </li>
+                            <li class="nav-divider">
+                               Rekap Laporan
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link <?=($this->uri->segment('1')=='LaporanKegiatan' && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>Laporan"><i class="fas fa-users"></i>Rekap Laporan per Kegiatan</a>
+                                
+                            </li>
+                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?=($this->uri->segment('1')=='LaporanKeseluruhan' && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>Laporan/keseluruhan" title="DataAnggaran" ><i class="far fa-money-bill-alt"></i>Rekap Laporan Keseluruhan<span class="badge badge-success">6</span></a>
+                                
                             </li>
                            
                         </ul>

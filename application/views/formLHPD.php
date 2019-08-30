@@ -26,7 +26,13 @@
                             <div class="form-group row">
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Meneruskan SPPD Nomor :</label>
                                 <div class="col-12 col-sm-8 col-lg-6">
+
 <!-- input nomor -->
+<?php if(isset($id_sppd)){ ?>
+<select class="form-control" name="id_sppd" id="provinsi" required="">
+    <option value="<?php echo $id_sppd ?>"      selected="selected"><?= $id_sppd?></option>
+</select>
+<?php }else{ ?>
 <select class="form-control" name="id_sppd" id="provinsi" required="">
     <option value="" selected="">Pilih Nomor SPPD</option>
             <!-- Tampilkan data pegawai -->
@@ -39,6 +45,7 @@
             <?php }} ?>
             <!-- /Tampilkan data pegawai -->
 </select>
+<?php } ?>
 <!-- end input nomor -->
                                 </div>
                             </div>

@@ -10,6 +10,9 @@ class CRUD extends CI_Model {
 			return $this->db->get_where('sppd',array('id_sppd'=>$id))->result_array();
 		}
 	}
+	public function getSppdAnggaran($id){
+		return $this->db->get_where('sppd',array('id_anggaran'=>$id))->result_array();
+	}
 
 	public function input_sppd($data){
 		$this->db->insert('sppd',$data);

@@ -129,10 +129,9 @@
                                                     	<?php 
                                                     		if(isset($spt[0]['no_spt'])){
                                                     			echo $spt[0]['no_spt'];
-                                                    		}else{
-                                                    			echo "Belum ada";
-                                                    		}
-                                                    	?>
+                                                    		}else{?>
+                                                    			<a href="<?php echo base_url("SuratPerintah/index/{$s['id_sppd']}") ?>">Buat</a>
+                                                    		<?php }?>
                                                     </td>
                                                     <?php  
                                                         $laporan = $m_sppd->mread_laporan($s['id_sppd']);  
@@ -141,10 +140,9 @@
                                                     	<?php 
                                                     		if(isset($laporan[0]['id_laporan'])){
                                                     			echo $laporan[0]['id_laporan'];
-                                                    		}else{
-                                                    			echo "Belum ada";
-                                                    		}
-                                                    	?>
+                                                    		}else{?>
+                                                    			<a href="<?php echo base_url("SuratHasil/index/{$s['id_sppd']}"); ?>">Buat</a>
+                                                    		<?php } ?>
                                                     </td>
                                                     <td><?= $s['tgl_berangkat']; ?></td>
                                                     <td>
@@ -172,7 +170,7 @@
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                             <div class="text-md-right footer-links d-none d-sm-block">
                             </div>
-                        </div>
+                        </div>	
                     </div>
                 </div>
     </div>
