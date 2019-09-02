@@ -71,7 +71,7 @@ class SPPD extends CI_Controller {
 		$writer->save('output/kesbang.xlsx');
 	}
 
-	public function createPdf($kode_sppd,$no_sppd,$pejabat,$nama_pegawai,$pg_pangkat,$pg_jabatan,$pg_golongan,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$beban_anggaran,$instansi,$id_anggaran,$keterangan)
+	public function createPdf($kode_sppd,$no_sppd,$pejabat,$id_pegawai,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$instansi,$id_anggaran,$keterangan)
 	{
 		$this->load->library('Pdf');
 
@@ -80,7 +80,7 @@ class SPPD extends CI_Controller {
 		$pdf = new Pdf('P','mm','F4',true,'UTF-8',false);
 
 		//preparation
-		$image_file = base_url("assets/img/logo-kesbang.jpg");
+		$image_file = base_url("assets/images/logo-kesbang.jpg");
 		
 
 		$pdf->setPrintHeader(false);
@@ -160,10 +160,11 @@ EOD;
 		));
 
 		//Pegawai yang diperintah
+		$pegawai = $this->CRUD->read_pegawai($id_pegawai);
 		$pdf->Cell(95, 0,'2.    Nama pegawai yang diperintah',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$nama_pegawai,0, 1, 'L',false,'',0,false,'T','C');//Nama pegawai
+		$pdf->Cell(95, 0,$pegawai[0]['nama'],0, 1, 'L',false,'',0,false,'T','C');//Nama pegawai
 		$pdf->Cell(95, 0," ",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');//NIP
+		$pdf->Cell(95, 0,"NIP. ".$id_pegawai,0, 1, 'L',false,'',0,false,'T','C');//NIP
 
 		$pdf->Line(10,101.5,190,101.5,array(
 			'width' => 0.2
@@ -171,7 +172,7 @@ EOD;
 
 		//Pangkat dan golongan
 		$pdf->Cell(95, 0,'3.    a.   Pangkat dan Golongan menurut PP no 11',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0, $pg_pangkat,",",$pg_golongan ,0, 1, 'L',false,'',0,false,'T','C');//Pangkat 
+		$pdf->Cell(95, 0,$pegawai[0]['pangkat']." / ".$pegawai[0]['golongan'],0, 1, 'L',false,'',0,false,'T','C');//Pangkat
 		$pdf->Cell(95, 0,"             Tahun 2011",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
@@ -179,7 +180,7 @@ EOD;
 			'width' => 0.2
 		));
 		$pdf->Cell(95, 0,'       b.   Jabatan/Instansi',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$pg_jabatan,0, 1, 'L',false,'',0,false,'T','C');//Jabatan
+		$pdf->Cell(95, 0,$pegawai[0]['jabatan'],0, 1, 'L',false,'',0,false,'T','C');//Jabatan
 		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
@@ -238,10 +239,18 @@ EOD;
 			'width' => 0.2
 		));
 		$pdf->Cell(95, 0,'8.   Pengikut',0, 0, '',false,'',0,false,'T','M');
-		foreach ($id_pengikut as $key => $p) {
-			$pdf->Cell(95, 0, $p,0, 1, 'L',false,'',0,false,'T','C');//Pengikut
-			$pdf->Cell(95, 0,"NIP.",0,	 0, 'L',false,'',0,false,'T','C'); 
+		
+		if (sizeof($id_pengikut)>=2) {
+			foreach ($id_pengikut as $p) {
+				$pengikut = $this->CRUD->read_pegawai($p);
+				$pdf->Cell(95, 0,$pengikut[0]['nama'],0, 1, 'L',false,'',0,false,'T','C');//Pengikut
+				$pdf->Cell(95, 0,"NIP. ". $p,0,	 0, 'L',false,'',0,false,'T','C');
+			}
+		}else{
+			$pdf->Cell(95, 0,"Terlampir",0, 1, 'L',false,'',0,false,'T','C');//Pengikut
+			$pdf->Cell(95, 0,"",0,	 0, 'L',false,'',0,false,'T','C');
 		}
+		
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
 		$pdf->Line(100,193.5,190,193.5,array(
@@ -1061,44 +1070,44 @@ EOD;
 
 	public function tambahSPPD(){
 
-		$this->load->model('CRUD','crud',TRUE);
-		$input_data_lain = array();
-		//$input_pengikut= array();
+		// $this->load->model('CRUD','crud',TRUE);
+		// $input_data_lain = array();
+		// //$input_pengikut= array();
 
-		$input_data_lain['pejabat'] 		= $this->input->post('pejabat');
-		$input_data_lain['id_pegawai'] 		= $this->input->post('id_pegawai');
-		$input_data_lain['maksud'] 			= $this->input->post('maksud');
-		$input_data_lain['alat_angkut'] 	= $this->input->post('alat_angkut');
-		$input_data_lain['tempat_berangkat'] = $this->input->post('tempat_berangkat');
-		$input_data_lain['tempat_tujuan'] 	= $this->input->post('tempat_tujuan');
-		$input_data_lain['lama_dinas'] 		= $this->input->post('lama_dinas');
-		$input_data_lain['tgl_berangkat'] 	= $this->input->post('tgl_berangkat');
-		$input_data_lain['tgl_kembali'] 	= $this->input->post('tgl_kembali');
-		//pengikut
-		//$input_pengikut['id_pengikut'] 		=  $this->input->post('id_pengikut[]');
-		$pengikut 							=$this->input->post('id_pengikut[]');
-		//
+		// $input_data_lain['pejabat'] 		= $this->input->post('pejabat');
+		// $input_data_lain['id_pegawai'] 		= $this->input->post('id_pegawai');
+		// $input_data_lain['maksud'] 			= $this->input->post('maksud');
+		// $input_data_lain['alat_angkut'] 	= $this->input->post('alat_angkut');
+		// $input_data_lain['tempat_berangkat'] = $this->input->post('tempat_berangkat');
+		// $input_data_lain['tempat_tujuan'] 	= $this->input->post('tempat_tujuan');
+		// $input_data_lain['lama_dinas'] 		= $this->input->post('lama_dinas');
+		// $input_data_lain['tgl_berangkat'] 	= $this->input->post('tgl_berangkat');
+		// $input_data_lain['tgl_kembali'] 	= $this->input->post('tgl_kembali');
+		// //pengikut
+		// //$input_pengikut['id_pengikut'] 		=  $this->input->post('id_pengikut[]');
+		// $pengikut 							=$this->input->post('id_pengikut[]');
+		// //
 		
-		$input_data_lain['instansi'] 		= $this->input->post('instansi');
-		//anggaran
-		$input_data_lain['id_anggaran'] 	= $this->input->post('id_anggaran');
-		//
-		$input_data_lain['keterangan'] 		= $this->input->post('keterangan');
-		$input_data_lain['no_sppd'] 		= $this->input->post('no_sppd');
-		$input_data_lain['kode_sppd'] 		= $this->input->post('kode_sppd');
-		$input_data_lain['tingkat'] 		= $this->input->post('tingkat');
-		//print_r($input_pengikut);
-		//print_r($pengikut);
-		$checking_insert = $this->crud->multiple_insert_SPPD($input_data_lain, $pengikut);
-		if ($checking_insert) {
-			//kalo sukse
-			redirect(base_url('SPPD/index'));
-			//print_r($checking_insert);
-		} 
+		// $input_data_lain['instansi'] 		= $this->input->post('instansi');
+		// //anggaran
+		// $input_data_lain['id_anggaran'] 	= $this->input->post('id_anggaran');
+		// //
+		// $input_data_lain['keterangan'] 		= $this->input->post('keterangan');
+		// $input_data_lain['no_sppd'] 		= $this->input->post('no_sppd');
+		// $input_data_lain['kode_sppd'] 		= $this->input->post('kode_sppd');
+		// $input_data_lain['tingkat'] 		= $this->input->post('tingkat');
+		// //print_r($input_pengikut);
+		// //print_r($pengikut);
+		// $checking_insert = $this->crud->multiple_insert_SPPD($input_data_lain, $pengikut);
+		// if ($checking_insert) {
+		// 	//kalo sukse
+		// 	redirect(base_url('SPPD/index'));
+		// 	//print_r($checking_insert);
+		// } 
 		//var_dump($input_data_lain);
 		//var_dump($input_pengikut);
 		
-	/*	$pejabat = $this->input->post('pejabat');
+		$pejabat = $this->input->post('pejabat');
 		$id_pegawai = $this->input->post('id_pegawai');
 		$maksud = $this->input->post('maksud');
 		$alat_angkut = $this->input->post('alat_angkut');
@@ -1115,11 +1124,9 @@ EOD;
 		$no_sppd = $this->input->post('no_sppd');
 		$kode_sppd = $this->input->post('kode_sppd');
 		$tingkat = $this->input->post('tingkat');
+		
 		//pengikut
-		$id_pengikut = $this->input->post('id_pengikut'); 
-
-
-
+		$id_pengikut = implode(",",$this->input->post('id_pengikut')); 
 
 		$data = array(
 			'id_sppd' => '',
@@ -1141,9 +1148,9 @@ EOD;
 			'tingkat' => $tingkat
 		); 
 		
-		print_r($data);
-		$this->CRUD->input_sppd($data); */
-		// $this->createPdf($kode_sppd,$no_sppd,$pejabat,$nama_pegawai,$pg_pangkat,$pg_jabatan,$pg_golongan,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$beban_anggaran,$instansi,$id_anggaran,$keterangan);
+		// print_r($data);
+		$this->CRUD->input_sppd($data); 
+		$this->createPdf($kode_sppd,$no_sppd,$pejabat,$id_pegawai,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$instansi,$id_anggaran,$keterangan);
 
 		// redirect('Excel/buatsurat');
 	}	

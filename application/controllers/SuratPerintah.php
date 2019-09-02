@@ -62,7 +62,7 @@ class SuratPerintah extends CI_Controller {
 			'tanggal_surat' => $tanggal_surat		
 			);
 		// print_r($data);
-		$this->CRUD->minput_spt($data);
+		// $this->CRUD->minput_spt($data);
 		$this->genSPT($id_sppd,$no_spt,$dasar,$untuk,$tanggal_surat);
 		//redirect('Suratspt/index');
 	}
@@ -162,38 +162,43 @@ EOD;
 		$pdf->setFont('times','',12);
 		$pdf->Cell(10, 0,':',0, 0, '',false,'',0,false,'T','M');
 		
+		$pdf->setFont('times','',10);
+		$html = '
+			<style>
+				table,tr,td{
+					border : 1px solid black;
+					text-align: center;
+					vertical-align: center;
+				}
+			</style>
+			<table>
+				<tr>
+					<td width="5%">No</td>
+					<td width="32%">Nama</td>
+					<td width="28%">NIP</td>
+					<td>Pangkat</td>
+					<td width="11%">Golongan</td>
+				</tr>
+			';
 		$i=1;
 		foreach($id_pegawai as $peg){
-			if ($i!=1) {
-				$pdf->Cell(45, 0,'',0, 0, '',false,'',0,false,'T','M');
-			}
-
-			$data_pegawai = $this->CRUD->read_pegawai($peg);
-			// print_r($data_pegawai);
-
-			$pdf->Cell(5, 0,"$i.  ",0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'Nama',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['nama'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Cell(50, 0,'',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'NIP',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['id_pegawai'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Cell(50, 0,'',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'Pangkat/Gol',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['pangkat'].'/'.$data_pegawai[0]['golongan'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Cell(50, 0,'',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'Jabatan',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['jabatan'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Write(5,'','',false,'C',true);
+			$pegawai = $this->CRUD->read_pegawai($peg);	
+			$html .= '
+				<tr>
+					<td>'.$i.'</td>
+					<td>'.$pegawai[0]['nama'].'</td>
+					<td>'.$peg.'</td>
+					<td>'.$pegawai[0]['pangkat'].'</td>
+					<td>'.$pegawai[0]['golongan'].'</td>
+				</tr>	
+			';	
 			$i++;
 		}
+		
+		$html .= '</table>';	
+		
+		$pdf->writeHTML($html, true, false, false, false, 'C');
+		$pdf->Write(5,'','',false,'C',true);
 
 		//untuk
 		$pdf->setFont('times','B',12);

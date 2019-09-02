@@ -251,32 +251,56 @@ class Laporan extends CI_Controller {
 					';
 				//Per SPPD
 				foreach($sppd as $s){
+					//rowspan
 					$x = sizeof(explode(',',$s['id_pengikut']))+1;
+					
+					//total per sppd
+					$total = array();
+
+					//menghitung total gaji pengikut
+					$pengikut = explode(',',$s['id_pengikut']);
+					$peng = array();
+					foreach($pengikut as $p){
+						array_push($peng, $p);
+					};	
+					foreach($peng as $p) {
+						$pegawai = $this->CRUD->read_pegawai($p);
+						$abc = array("a","b","c","d");		
+						$golongan = str_replace($abc, "", $pegawai[0]['golongan']);
+						$golongan = str_replace("/", "", $golongan);
+						$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
+						$gaji = $this->gaji($wil,$golongan);
+						array_push($total,$gaji);
+					}
 					
 					$pegawai = $this->CRUD->read_pegawai($s['id_pegawai']);	
 
+					//Gaji
+					
 					$abc = array("a","b","c","d");
 					$golongan = str_replace($abc, "", $pegawai[0]['golongan']);
 					$golongan = str_replace("/", "", $golongan);
 					$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
 					$gaji = $this->gaji($wil,$golongan);
+					array_push($total,$gaji);
 					
+					//Sppd
 					$html .= '
 							<!-- Per SPPD -->
 							<tr>
-								<td rowspan="6">1</td>
-								<td rowspan="6">'.$s['no_sppd'].'</td>
+								<td rowspan="'.$x.'">1</td>
+								<td rowspan="'.$x.'">'.$s['no_sppd'].'</td>
 								<td>'.$pegawai[0]['nama'].'</td>
-								<td rowspan="6">tanggal_surat</td>	
-								<td rowspan="6">'.$s['tgl_berangkat'].'</td>
-								<td rowspan="6">'.$s['tgl_kembali'].'</td>
-								<td rowspan="6">no bku</td>
-								<td rowspan="6">'.$s['tempat_tujuan'].'</td>
-								<td rowspan="6">transport</td>
-								<td> Rp. '.number_format(20000,2,',','.').'</td>
-								<td rowspan="6">total</td>
-								<td rowspan="6">APBD KOTA TASIKMALAYA</td>
-								<td rowspan="6">'.$s['keterangan'].'</td>
+								<td rowspan="'.$x.'">tanggal_surat</td>	
+								<td rowspan="'.$x.'">'.$s['tgl_berangkat'].'</td>
+								<td rowspan="'.$x.'">'.$s['tgl_kembali'].'</td>
+								<td rowspan="'.$x.'">no bku</td>
+								<td rowspan="'.$x.'">'.$s['tempat_tujuan'].'</td>
+								<td rowspan="'.$x.'">transport</td>
+								<td> Rp. '.number_format($gaji,2,',','.').'</td>
+								<td rowspan="'.$x.'"> Rp. '.number_format(array_sum($total),2,',','.').'	</td>
+								<td rowspan="'.$x.'">APBD KOTA TASIKMALAYA</td>
+								<td rowspan="'.$x.'">'.$s['keterangan'].'</td>
 							</tr>
 							';
 					//pengikut
@@ -286,44 +310,22 @@ class Laporan extends CI_Controller {
 						array_push($peng, $p);
 					};					
 
-					$html .= '
-							<tr>
-								<td>abc</td>
-								<td>200</td>
-							</tr>
-						';
-					$html .= '
-							<tr>
-								<td>abc</td>
-								<td>200</td>
-							</tr>
-						';
-					$html .= '
-							<tr>
-								<td>abc</td>
-								<td>200</td>
-							</tr>
-						';
-					$html .= '
-							<tr>
-								<td>abc</td>
-								<td>200</td>
-							</tr>
-						';
-					$html .= '
-							<tr>
-								<td>abc</td>
-								<td>200</td>
-							</tr>
-						';
-
+					//pengikut beserta gajinya
 					foreach($peng as $p){
-						// $html .= '
-						// 	<tr>
-						// 		<td>abc</td>
-						// 		<td>200</td>
-						// 	</tr>
-						// ';	
+						$abc = array("a","b","c","d");		
+						$golongan = str_replace($abc, "", $pegawai[0]['golongan']);
+						$golongan = str_replace("/", "", $golongan);
+						$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
+						$gaji = $this->gaji($wil,$golongan);
+						array_push($total,$gaji);
+						$pegawai = $this->CRUD->read_pegawai($p);
+						$html .= '
+							<tr>
+								<td>'.$pegawai[0]['nama'].'</td>
+								<td>Rp. '.number_format($gaji,2,',','.').'</td>
+							</tr>
+						';	
+
 					}	
 				};//endforeach - per sppd
 			
@@ -337,7 +339,7 @@ class Laporan extends CI_Controller {
 		$pdf->Output('output/contoh.pdf','I');
 	}
 
-
+	//method hitung gaji
 	public function gaji($wilayah,$golongan){
 		//kurang penginapan dan luar dki
 		if($wilayah == "DI"){

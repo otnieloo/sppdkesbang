@@ -50,15 +50,16 @@ class SuratHasil extends CI_Controller {
 
 	public function tambahLaporan(){
 			$sppd = $this->input->post('id_sppd');
-			$hasil = $this->input->post('hasil');
- 
+			$hasil = $this->input->post('ringkasan');
+ 			
+ 			$hasil = implode(",", $hasil);
 			$data = array(
 				'id_laporan' => null,
 				'id_sppd' => $sppd,
 				'hasil' => $hasil
 				);
 			//print_r($data);
-			$this->CRUD->minput_laporan($data);
+			// $this->CRUD->minput_laporan($data);
 			$this->genLap($sppd,$hasil);
 			// redirect('SuratHasil/index');
 	}
@@ -95,36 +96,43 @@ class SuratHasil extends CI_Controller {
 		$pdf->setFont('times','',12);
 		$pdf->Write(10,'Petugas yang melaksanakan perjalanan dinas : ','',false,'L',true);
 
+		$pdf->setFont('times','',10);
+		$html = '
+			<style>
+				table,tr,td{
+					border : 1px solid black;
+					text-align: center;
+					vertical-align: center;
+				}
+			</style>
+			<table>
+				<tr>
+					<td width="5%">No</td>
+					<td width="32%">Nama</td>
+					<td width="28%">NIP</td>
+					<td>Pangkat</td>
+					<td width="11%">Golongan</td>
+				</tr>
+			';
 		$i=1;
-		// print_r($id_pegawai);
 		foreach($id_pegawai as $peg){
-			$data_pegawai = $this->CRUD->read_pegawai($peg);
-
-
-			$pdf->Cell(5, 0,"",0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,"$i.  ",0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'Nama',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['nama'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'NIP',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['id_pegawai'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'Jabatan',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['jabatan'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(25, 0,'Unit Kerja',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(5, 0,':',0, 0, '',false,'',0,false,'T','M');
-			$pdf->Cell(10, 0,$data_pegawai[0]['unit_kerja'],0, 1, '',false,'',0,false,'T','M');
-
-			$pdf->Write(5,'','',false,'C',true);
+			$pegawai = $this->CRUD->read_pegawai($peg);	
+			$html .= '
+				<tr>
+					<td>'.$i.'</td>
+					<td>'.$pegawai[0]['nama'].'</td>
+					<td>'.$peg.'</td>
+					<td>'.$pegawai[0]['pangkat'].'</td>
+					<td>'.$pegawai[0]['golongan'].'</td>
+				</tr>	
+			';	
+			$i++;
 		}
+		
+		$html .= '</table>';
+		$pdf->writeHTML($html, true, false, false, false, 'C');
 
+		$pdf->Write(5,'','',false,'C',true);
 		$pdf->Write(10,'Dengan ini melaporkan hasil perjalanan dinas :','',false,'L',true);
 
 		$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
@@ -148,9 +156,18 @@ class SuratHasil extends CI_Controller {
 		$pdf->Cell(15, 0,'',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(10, 0,'B.      Ringkasan Hasil Kegiatan :',0, 1, '',false,'',0,false,'T','M');
 
-		$pdf->Cell(25, 0,'',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(5, 0,"$i. ",0, 0, '',false,'',0,false,'T','M');
-		$pdf->MultiCell(0, 0, $hasil, 0, 'L', false, 1, '', '', true, 0, false, true, 0, 'T', false);
+		
+
+		//ringkasam
+		$hasil = explode(",",$hasil);
+		$i = 1;
+		foreach ($hasil as $h) {
+			$pdf->Cell(25, 0,'',0, 0, '',false,'',0,false,'T','M');
+			$pdf->Cell(5, 0,"$i. ",0, 0, '',false,'',0,false,'T','M');
+			$pdf->MultiCell(0, 0, $h, 0, 'L', false, 1, '', '', true, 0, false, true, 0, 'T', false);
+			$i++;
+		}
+		
 
 		$pdf->Write(5,'','',false,'L',true);
 
