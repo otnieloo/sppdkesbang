@@ -125,14 +125,66 @@
 <!-- Jquery untuk menghilangkan nama pengikut jika sudah dipilih sebagai pegawai -->
 <script>
     $(document).ready(function(){
-        $("#pengikut :checkbox").each(function(){
+        $("#id_pengikut :checkbox").each(function(){
             this.prop('hidden',true);
         });
-        $("#pegawai").change(function(){
+        $("#id_pegawai").change(function(){
             var pilihan = this.value;
             $(':checkbox').removeAttr('disabled');
             $(':checkbox[value='+pilihan+']').prop('disabled','disabled');
         });
     });
 </script>
+<!-- <script>
+        document.getElementById("generate").addEventListener("click",function (){
+            var input = document.createElement("br");
+            console.log('b');
+            document.getElementById("pin").appendChild(input);
 
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "ringkasan[]";
+            input.id = "ringkasan";
+            console.log('a');
+            document.getElementById("pin").appendChild(input);
+
+            var input = document.createElement("button");
+            input.type = "button";
+            input.name = "hapus";
+            input.value = "hapus";
+            input.innerHTML = "Hapus";
+            input.setAttribute("onclick", value: "hapusInput()")
+            console.log('x');
+            document.getElementById("pin").appendChild(input);
+        } );
+        
+
+        function hapusInput(){
+            var input = document.getElementById("ringkasan");
+            var pin = document.getElementById("pin");
+            pin.removeChild(input);
+            console.log("asdas");
+        }
+    </script>
+ -->
+
+ <script>
+     //JQUERY untuk menambah dan mengurangi field input
+     $(document).ready(function() {
+        var wrapper         = $("#inputWrapper"); //Fields wrapper
+        var add_button      = $("#add"); //Add button ID
+        
+        var x = 1; //initlal text box count
+        $(add_button).click(function(e){ //on add input button click
+            e.preventDefault();
+            // if(x < max_fields){ //max input box allowed
+                x++; //text box increment
+                $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+            //}
+        });
+        
+        $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+            e.preventDefault(); $(this).parent('div').remove(); x--;
+        })
+    });
+ </script>

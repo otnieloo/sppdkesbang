@@ -553,6 +553,8 @@ EOD;
 	public function cetakPdf($id)
 	{
 		$data = $this->CRUD->getSppd($id);
+		// print_r($data);
+		// die;
 		$pejabat = $data[0]['pejabat'];
 		$id_pegawai = $data[0]['id_pegawai'];
 		$maksud = $data[0]['maksud'];
@@ -577,10 +579,7 @@ EOD;
 		$jabatan = $data3[0]['jabatan'];
 		$nama_pegawai = $data3[0]['nama'];
 		$id_pengikut = explode(',', $id_pengikut);
-		foreach ($id_pengikut as $key => $pengikut) {
-			echo "$p$key => $pengikut";
-			# code...
-		}
+
 		$kode_anggaran = $data2[0]['kode_anggaran'];
 
 		$this->load->library('Pdf');
@@ -670,10 +669,11 @@ EOD;
 		));
 
 		//Pegawai yang diperintah
+		$pegawai = $this->CRUD->read_pegawai($id_pegawai);
 		$pdf->Cell(95, 0,'2.    Nama pegawai yang diperintah',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$nama_pegawai,0, 1, 'L',false,'',0,false,'T','C');//Nama pegawai
+		$pdf->Cell(95, 0,$pegawai[0]['nama'],0, 1, 'L',false,'',0,false,'T','C');//Nama pegawai
 		$pdf->Cell(95, 0," ",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');//NIP
+		$pdf->Cell(95, 0,"NIP. ".$id_pegawai,0, 1, 'L',false,'',0,false,'T','C');//NIP
 
 		$pdf->Line(10,101.5,190,101.5,array(
 			'width' => 0.2
@@ -681,7 +681,7 @@ EOD;
 
 		//Pangkat dan golongan
 		$pdf->Cell(95, 0,'3.    a.   Pangkat dan Golongan menurut PP no 11',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$pangkat,0, 1, 'L',false,'',0,false,'T','C');//Pangkat
+		$pdf->Cell(95, 0,$pegawai[0]['pangkat']." / ".$pegawai[0]['golongan'],0, 1, 'L',false,'',0,false,'T','C');//Pangkat
 		$pdf->Cell(95, 0,"             Tahun 2011",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
@@ -689,7 +689,7 @@ EOD;
 			'width' => 0.2
 		));
 		$pdf->Cell(95, 0,'       b.   Jabatan/Instansi',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$jabatan,0, 1, 'L',false,'',0,false,'T','C');//Jabatan
+		$pdf->Cell(95, 0,$pegawai[0]['jabatan'],0, 1, 'L',false,'',0,false,'T','C');//Jabatan
 		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
@@ -748,10 +748,17 @@ EOD;
 			'width' => 0.2
 		));
 		$pdf->Cell(95, 0,'8.   Pengikut',0, 0, '',false,'',0,false,'T','M');
-	
-			$pdf->Cell(95, 0,$pengikut,0, 1, 'L',false,'',0,false,'T','C');//Pengikut
-		$pdf->Cell(95, 0,"NIP",0,	 0, 'L',false,'',0,false,'T','C');
 		
+		if (sizeof($id_pengikut)<2) {
+			foreach ($id_pengikut as $p) {
+				$pengikut = $this->CRUD->read_pegawai($p);
+				$pdf->Cell(95, 0,$pengikut[0]['nama'],0, 1, 'L',false,'',0,false,'T','C');//Pengikut
+				$pdf->Cell(95, 0,"NIP. ". $p,0,	 0, 'L',false,'',0,false,'T','C');
+			}
+		}else{
+			$pdf->Cell(95, 0,"Terlampir",0, 1, 'L',false,'',0,false,'T','C');//Pengikut
+			$pdf->Cell(95, 0,"",0,	 0, 'L',false,'',0,false,'T','C');
+		}
 		
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
@@ -766,7 +773,7 @@ EOD;
 		$pdf->Cell(95, 0,"      a.   Instansi",0,	 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,$instansi,0, 1, 'L',false,'',0,false,'T','C');//Instansi pembebanan anggaran
 		$pdf->Cell(95, 0,"      b.   Mata Anggaran",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$kode_anggaran,0, 1, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(95, 0,$id_anggaran,0, 1, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0,	 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"1.19.1.19.01. 15.05.5.2.2.15.01",0, 1, 'L',false,'',0,false,'T','C');//Mata anggaran
 

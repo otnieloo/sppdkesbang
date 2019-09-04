@@ -37,7 +37,7 @@
                                             <?php
                                             foreach($sppd as $d){
                                                 $sp = $this->CRUD->mread_laporan($d['id_sppd']);
-                                                echo($sp);
+                                                // echo($sp);
                                             if($sp == null){?>
                                                 <option value="<?php echo $d['id_sppd']; ?>"><?php echo $d['no_sppd']; ?> </option>
                                             <?php }} ?>
@@ -51,8 +51,11 @@
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right">Ringkasan Hasil Kegiatan :</label>
                                 <div class="col-12 col-sm-8 col-lg-6" id="pin">
                                     <!-- input Ringkasan Hasil Kegiatan -->
-                                    <input type="text" name="ringkasan[]" width="300dp">
-                                    <button id="generate" onclick="genInput()" type="button">Tambah</button>
+                                    <div id="inputWrapper">
+                                        <input type="text" name="ringkasan[]" width="300dp" id="input">    
+                                    </div>
+                                
+                                    <button type="button" id="add">Tambah</button>
                                     <!-- <textarea name="hasil" required="" class="form-control" rows="8"></textarea> -->
                                     <!-- end input Ringkasan Hasil Kegiatan -->
                                 </div>
@@ -74,19 +77,4 @@
         </div>
     </div>
 
-    <script>
-        // if (document.getElementById("generate").click()) {
-        //     console.log("asdas");
-        // }
-                function genInput(){
-                    var input = document.createElement("br");
-                    console.log('b');
-                    document.getElementById("pin").appendChild(input);
-                    var input = document.createElement("input");
-                    input.type = "text";
-                    input.name = "ringkasan[]";
-                    console.log('a');
-                    document.getElementById("pin").appendChild(input);
-                        
-                }
-    </script>
+    
