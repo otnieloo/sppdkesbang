@@ -459,6 +459,121 @@ class Laporan extends CI_Controller {
 		}
 	}
 
+	public function createExcel($id)
+		{
+			$anggaran = $this->CRUD->mread_anggaran($id);
+			$sppd = $this->CRUD->getSppdAnggaran($id);	
+
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+						
+			$sheet->getColumnDimension('B')->setWidth(3.5);
+			$sheet->getColumnDimension('C')->setWidth(21.5);
+			$sheet->getColumnDimension('D')->setWidth(16.5);
+			$sheet->getColumnDimension('E')->setWidth(15);
+			$sheet->getColumnDimension('F')->setWidth(13);
+			$sheet->getColumnDimension('G')->setWidth(11);
+			$sheet->getColumnDimension('H')->setWidth(16);
+			$sheet->getColumnDimension('I')->setWidth(18);
+			$sheet->getColumnDimension('J')->setWidth(13);
+			$sheet->getColumnDimension('K')->setWidth(11);
+
+			$sheet->setCellValue('B3','Daftar Pegawai Penerima Surat Perintah Perjalanan Dinas (SPPD) Dalam Daerah
+');
+			$uraian = $anggaran[0]['uraian'];
+			$kode_anggaran = $anggaran[0]['kode_anggaran'];
+			$sheet->setCellValue('B4',"Kegiatan $uraian");
+			$sheet->setCellValue('B5','Kantor Kesbang dan Linmas');
+			$sheet->setCellValue('B6','Tahun Anggaran 2019');
+			$sheet->setCellValue('B9',"$kode_anggaran");
+
+			$sheet->setCellValue('B10','No');
+			$sheet->setCellValue('C10','Nama/NIP');
+			$sheet->setCellValue('D10','Pangkat/Golongan');
+			$sheet->setCellValue('E10','Jabatan');
+			$sheet->setCellValue('F10','Besarnya');
+			$sheet->setCellValue('G10','Tanggal');
+			$sheet->setCellValue('H10','Uraian');
+			$sheet->setCellValue('I10','Tujuan');
+			$sheet->setCellValue('J10','Tanda Tangan');
+			$sheet->setCellValue('K10','Asal Surat');
+			$sheet->setCellValue('B11','1');
+			$sheet->setCellValue('C11','2');
+			$sheet->setCellValue('D11','3');
+			$sheet->setCellValue('E11','4');
+			$sheet->setCellValue('F11','5');
+			$sheet->setCellValue('G11','6');
+			$sheet->setCellValue('H11','7');
+			$sheet->setCellValue('I11','8');
+			$sheet->setCellValue('J11','9');
+			$sheet->setCellValue('K11','10');
+			
+			//Loop
+			$x = 13;
+			$i = 1;
+			foreach($sppd as $s) { 
+				$pegawai = $this->CRUD->read_pegawai($s['id_pegawai']);
+				$z = $x;
+
+				$nama = $pegawai[0]['nama'];
+				$id_pegawai = $s['id_pegawai'];
+				$pangkat = $pegawai[0]['pangkat'];
+				$golongan = $pegawai[0]['golongan'];
+				$jabatan = $pegawai[0]['jabatan'];
+				$tgl_surat = $s['tgl_surat'];
+				$maksud = $s['maksud'];
+				$tempat_tujuan = $s['tempat_tujuan'];
+
+				$sheet->setCellValue("B$x","$i");
+				$sheet->setCellValue("C$x","$nama \n $id_pegawai");
+				$sheet->setCellValue("D$x","$pangkat / $golongan");
+				$sheet->setCellValue("E$x","$jabatan");
+				$sheet->setCellValue("F$x",'Rp. 85.000,-');
+				$sheet->setCellValue("G$x","$tgl_surat");
+				$sheet->setCellValue("H$x","$maksud");
+				$sheet->setCellValue("I$x","$tempat_tujuan");
+				$sheet->setCellValue("J$x",'ttd');
+				$sheet->setCellValue("K$x",'asal surat');
+				
+				$y = 2;
+				for ($j=0; $j < $y; $j++) { 
+					$x++;
+					$sheet->setCellValue("C$x","Suparto, S.IP \n NIP. 123123");
+					$sheet->setCellValue("D$x",'Penata Tk.I/III/d');
+					$sheet->setCellValue("E$x",'Kasi HAL dan PMA');
+					$sheet->setCellValue("F$x",'Rp. 85.000,-');
+				}
+				
+				$sheet->mergeCells("B$z:B$x");
+				$sheet->mergeCells("G$z:G$x");
+				$sheet->mergeCells("H$z:H$x");
+				$sheet->mergeCells("I$z:I$x");
+				$sheet->mergeCells("J$z:J$x");
+				$sheet->mergeCells("K$z:K$x");
+
+				$x+=$y;$i++;
+			}
+			
+			
+
+			$sheet->getStyle('B10:K1000')->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('B10:K1000')->getAlignment()->setVertical('center');
+			$sheet->getStyle('B10:K1000')->getAlignment()->setWrapText(true);
+
+
+
+			$writer = new Xlsx($spreadsheet);
+
+			$filename = 'contoh';
+
+			// echo base_url();
+
+			header('Content-Type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
+			header('Cache-Control: max-age=0');
+
+			$writer->save('php://output');
+		}
 	
 }
 ?>

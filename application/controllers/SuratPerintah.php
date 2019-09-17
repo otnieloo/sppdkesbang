@@ -240,6 +240,176 @@ EOD;
 
 		$pdf->Output('output/contoh.pdf','I');
 	}
+
+	public function cetakSPT($id_spt) {
+		$spt = $this->CRUD->mread_sptId($id_spt);
+		
+		$id_sppd = $spt[0]['id_sppd'];
+		$sppd = $this->CRUD->getSppd($id_sppd);
+		$id_pegawai = array($sppd[0]['id_pegawai']);
+		$id_pengikut = $sppd[0]['id_pengikut'];
+		$id_pengikut2 = explode(",",$id_pengikut);
+
+		foreach($id_pengikut2 as $peng){
+			array_push($id_pegawai,$peng);
+		}
+		
+		ob_start();
+
+		$pdf = new Pdf('P','mm','F4',true,'UTF-8',false);
+
+		//preparation
+		$image_file = base_url("assets/images/logo-kesbang.jpg");
+
+		$pdf->setPrintHeader(false);
+		$pdf->setPrintFooter(false);
+
+		//Halaman pertama
+		$pdf->AddPage();
+
+		$pdf->setFont('times','B',14);
+
+		//Header
+		$header = <<<EOD
+      <p><span>PEMERINTAH KABUPATEN TASIKMALAYA</span>
+      	<br><span style="font-size: 16sp;">KANTOR KESATUAN BANGSA DAN LINMAS</span>
+      	<br><span style="font-size: 11sp;">Jalan Pemuda No. 1 Tasikmalaya, Kode Pos 46113</span>
+      	<br><span style="font-size: 11sp;">Telp.  (0265) 336438 Fax (0265) 336436</span>
+      </p>
+EOD;
+
+		$header2 = <<<EOD
+      <table>
+		<tr>
+			<th>Nama</th>
+			<th>NIP</th>
+			<th>Pangkat/Gol</th>
+			<th>Jabatan</th>
+		</tr>
+      </table>
+EOD;
+
+		//logo
+		$pdf->Image($image_file, 20, 10, 20, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+		
+		$tagvs = array('p' => array(0 => array('h' => 0, 'n' => 2), 1 => array('h' => 1.3, 'n' => 10)));
+
+		$pdf->writeHTMLCell(0, 0, 45, 10, $header, 0, 1, 0, true, 'C', true);
+		$pdf->Line(15,37.5,190,37.5,array(
+			'width' => 1.2
+		));
+
+		$pdf->Write(10,'','',false,'C',true);
+
+		//judul surat
+		$pdf->setFont('times','B',14);
+		$pdf->Write(0,'SURAT PERINTAH TUGAS','',false,'C',true);
+		$pdf->Line(73,51.5,136,51.5,array(
+			'width' => 0.5
+		));
+
+		//nomor surat
+		$pdf->setFont('times','',12);
+		$pdf->Write(0,$spt[0]['no_spt'],'',false,'C',true);
+
+		$pdf->Write(15,'','',false,'C',true);
+
+		//dasar surat
+		$pdf->setFont('times','B',12);
+		$pdf->Cell(10, 0,'',0, 0, '',false,'',0,false,'T','M');
+		$pdf->Cell(25, 0,'Dasar',0, 0, '',false,'',0,false,'T','M');
+		$pdf->setFont('times','',12);
+		$pdf->Cell(10, 0,':',0, 0, '',false,'',0,false,'T','M');
+		$pdf->MultiCell(0, 0, $spt[0]['dasar'], 0, 'J', false, 1, '', '', true, 0, false, true, 0, 'T', false);
+
+		$pdf->setFont('times','B',12);
+		$pdf->Write(20,'MEMERINTAHKAN','',false,'C',true);
+		
+		//pengikut
+		$pdf->setFont('times','B',12);
+		$pdf->Cell(10, 0,'',0, 0, '',false,'',0,false,'T','M');
+		$pdf->Cell(25, 0,'Kepada',0, 0, '',false,'',0,false,'T','M');
+		$pdf->setFont('times','',12);
+		$pdf->Cell(10, 0,':',0, 0, '',false,'',0,false,'T','M');
+		
+		$pdf->setFont('times','',10);
+		$html = '
+			<style>
+				table,tr,td{
+					border : 1px solid black;
+					text-align: center;
+					vertical-align: center;
+				}
+			</style>
+			<table>
+				<tr>
+					<td width="5%">No</td>
+					<td width="32%">Nama</td>
+					<td width="28%">NIP</td>
+					<td>Pangkat</td>
+					<td width="11%">Golongan</td>
+				</tr>
+			';
+		$i=1;
+		foreach($id_pegawai as $peg){
+			$pegawai = $this->CRUD->read_pegawai($peg);	
+			$html .= '
+				<tr>
+					<td>'.$i.'</td>
+					<td>'.$pegawai[0]['nama'].'</td>
+					<td>'.$peg.'</td>
+					<td>'.$pegawai[0]['pangkat'].'</td>
+					<td>'.$pegawai[0]['golongan'].'</td>
+				</tr>	
+			';	
+			$i++;
+		}
+		
+		$html .= '</table>';	
+		
+		$pdf->writeHTML($html, true, false, false, false, 'C');
+		$pdf->Write(5,'','',false,'C',true);
+
+		//untuk
+		$pdf->setFont('times','B',12);
+		$pdf->Cell(10, 0,'',0, 0, '',false,'',0,false,'T','M');
+		$pdf->Cell(25, 0,'Untuk',0, 0, '',false,'',0,false,'T','M');
+		$pdf->setFont('times','',12);
+		$pdf->Cell(10, 0,':',0, 0, '',false,'',0,false,'T','M');
+			
+		$pdf->Cell(5, 0,'1.  ',0, 0, '',false,'',0,false,'T','M');
+		$pdf->MultiCell(0, 0, $spt[0]['untuk'], 0, 'J', false, 1, '', '', true, 0, false, true, 0, 'T', false);	
+
+		$pdf->Cell(45, 0,'',0, 0, '',false,'',0,false,'T','M');
+		$pdf->Cell(5, 0,'2.  ',0, 0, '',false,'',0,false,'T','M');
+		$pdf->MultiCell(0, 0, "Demikian Surat Perintah ini agar dilaksanakan dengan penuh rasa tanggungjawab serta melaporkan hasilnya kepada pemberi tugas", 0, 'J', false, 1, '', '', true, 0, false, true, 0, 'T', false);
+
+		$pdf->Write(10,'','',false,'C',true);
+
+		$pdf->Cell(110, 0,"",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(40, 0,"Ditetapkan di    : Tasikmalaya",0, 1, 'L',false,'',0,false,'T','C');//Tiba kembali di
+
+		$pdf->Cell(110, 0,"",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(40, 0,"Pada tanggal     : ".$spt[0]['tanggal_surat'],0, 1, 'L',false,'',0,false,'T','C');// Tanggal kembali
+		$pdf->Write(10,'','',false,'C',true);
+
+		$pdf->Cell(90, 0,"",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->MultiCell(100, 0, "KEPALA KANTOR KESBANG DAN LINMAS KABUPATEN TASIKMALAYA", 0, 'C', false, 1, '', '', true, 0, false, true, 0, 'T', false);
+
+		$pdf->setFont('times','U',12);
+		$pdf->Write(12,'','',false,'C',true);
+		$pdf->Cell(120, 0,"",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(65, 0,"Iwan Ridwan, S.IP",0, 1, 'L',false,'',0,false,'T','C');//Kepala kantor
+
+		$pdf->setFont('times','',12);
+		$pdf->Cell(125, 0,"",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(65, 0,"Pembina Tk. 1",0, 1, 'L',false,'',0,false,'T','C');//Pangkat kepala
+
+		$pdf->Cell(110, 0,"",0, 0, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(65, 0,"NIP.19641201 198603 1 013",0, 1, 'L',false,'',0,false,'T','C');//Nip kepala
+
+		$pdf->Output('output/contoh.pdf','I');
+	}
 	
 }
 

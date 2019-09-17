@@ -10,6 +10,7 @@ class CRUD extends CI_Model {
 			return $this->db->get_where('sppd',array('id_sppd'=>$id))->result_array();
 		}
 	}
+
 	public function getSppdAnggaran($id){
 		return $this->db->get_where('sppd',array('id_anggaran'=>$id))->result_array();
 	}
@@ -17,7 +18,7 @@ class CRUD extends CI_Model {
 	public function input_sppd($data){
 		$this->db->insert('sppd',$data);
 		return $this->db->affected_rows();
-		// print_r($data);
+		// print_r($data);die;
 	}
 
 	//NYOBA NIH YA GUYS TERNYATA BISA GUYS, JANGAN DELETE YA GUYS
@@ -97,6 +98,15 @@ class CRUD extends CI_Model {
 		}
 	}
 
+	public function mread_sptId($id = null){
+		// print_r($data);
+		if ($id === null) {
+			return $this->db->get('spt')->result_array();
+		}else{
+			return $this->db->get_where('spt',array('id_spt'=>$id))->result_array();
+		}
+	}
+
 	public function mupdate_spt($id,$data){
 		$this->db->where(array('id_spt' => $id));
 		$this->db->update('spt',$data);
@@ -121,6 +131,15 @@ class CRUD extends CI_Model {
 			return $this->db->get('laporan')->result_array();
 		}else{
 			return $this->db->get_where('laporan',array('id_sppd'=>$id))->result_array();
+		}
+	}
+
+	public function mread_laporanId($id = null){
+		// print_r($data);
+		if ($id === null) {
+			return $this->db->get('laporan')->result_array();
+		}else{
+			return $this->db->get_where('laporan',array('id_laporan'=>$id))->result_array();
 		}
 	}
 

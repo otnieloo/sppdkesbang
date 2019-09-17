@@ -72,7 +72,7 @@
                                 <label class="col-12 col-sm-3 col-form-label text-sm-right"> Tanggal Surat:</label>
                                  <div class="col-8 col-sm-4 col-lg-3 input-group date" id="" data-target-input="nearest">
 <!-- input tgl kembali -->
-<input name="tanggal_surat" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker3"  />
+<input name="tanggal_surat" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker3"  />
 <!-- end input tgl kembali -->
                                 <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>

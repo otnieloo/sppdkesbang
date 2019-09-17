@@ -102,8 +102,8 @@
                                     <h3 class="section-title">ARSIP SURAT</h3>
                                 </div>
                                 <div class="card">
-                                    <div class="campaign-table table-responsive">
-                                        <table class="table">
+                                    <div class="campaign-table table-responsive p-2">
+                                        <table class="table table-striped table-bordered first" id="dataTable">
                                             <thead>
                                                 <tr class="border-0">
                                                     <th class="border-0">No</th>
@@ -111,7 +111,6 @@
                                                     <th class="border-0">Surat Perintah</th>
                                                     <th class="border-0">Laporan Hasil</th>
                                                     <th class="border-0">Tanggal SPPD</th>
-                                                    <th class="border-0">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -128,7 +127,9 @@
                                                     <td>
                                                     	<?php 
                                                     		if(isset($spt[0]['no_spt'])){
-                                                    			echo $spt[0]['no_spt'];
+                                                        ?>
+                                                            <a href="<?php echo base_url("SuratPerintah/cetakSPT/{$spt[0]['id_spt']}") ?>" target="_blank"><?= $spt[0]['no_spt'];?></a>
+                                                        <?php
                                                     		}else{?>
                                                     			<a href="<?php echo base_url("SuratPerintah/index/{$s['id_sppd']}") ?>">Buat</a>
                                                     		<?php }?>
@@ -139,14 +140,14 @@
                                                     <td>
                                                     	<?php 
                                                     		if(isset($laporan[0]['id_laporan'])){
-                                                    			echo $laporan[0]['id_laporan'];
+                                                    	?>
+                                                            <a href="<?php echo base_url("SuratHasil/cetakLaporan/{$laporan[0]['id_laporan']}") ?>" target="_blank"><?= $laporan[0]['hasil'];?></a>
+                                                        <?php
                                                     		}else{?>
                                                     			<a href="<?php echo base_url("SuratHasil/index/{$s['id_sppd']}"); ?>">Buat</a>
                                                     		<?php } ?>
                                                     </td>
                                                     <td><?= $s['tgl_berangkat']; ?></td>
-                                                    <td>
-                                                    </td>
                                                 </tr>
                                             <?php $no++;}?>
                                             </tbody>

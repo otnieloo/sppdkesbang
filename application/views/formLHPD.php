@@ -52,10 +52,10 @@
                                 <div class="col-12 col-sm-8 col-lg-6" id="pin">
                                     <!-- input Ringkasan Hasil Kegiatan -->
                                     <div id="inputWrapper">
-                                        <input type="text" name="ringkasan[]" width="300dp" id="input">    
+                                        <input type="text" class="form-control" name="ringkasan[]" width="300dp" id="input">    
                                     </div>
                                 
-                                    <button type="button" id="add">Tambah</button>
+                                    <button type="button" id="add" class="btn btn-info my-2">Tambah</button>
                                     <!-- <textarea name="hasil" required="" class="form-control" rows="8"></textarea> -->
                                     <!-- end input Ringkasan Hasil Kegiatan -->
                                 </div>

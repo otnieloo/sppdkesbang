@@ -1,4 +1,4 @@
-<!-- wrapper  -->
+wrapper  -->
 <!-- ================================================ -->
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
@@ -139,24 +139,12 @@
                                 <div class="col-12 col-sm-10 col-lg-8">
                                     <!-- input nomor -->
                                     <div class="form-row">
-                                        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12 mb-2">
-                                            <label for="validationCustom03"></label>
-                                            <!-- input nomor -->
-                                            <div class="input-group">
-                                                <input type="text" name="lama_dinas" class="filterme form-control">
-                                                <div class="input-group-append"><span class="input-group-text">Hari</span></div>
-                                            </div>
-                                            <!-- input nomor -->
-                                            <div class="invalid-feedback">
-                                                Please provide a valid city.
-                                            </div>
-                                        </div>
                                         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 mb-2">
                                             <label for="validationCustom04">Tanggal Berangkat</label>
                                             <!-- Date Picker -->
                                             <div class=" input-group date" id="" data-target-input="nearest">
                                                 <!-- input tgl kembali -->
-                                                <input name="tgl_berangkat" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker4"  />
+                                                <input name="tgl_berangkat" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker4"/>
                                                 <!-- end input tgl kembali -->
                                                 <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -168,19 +156,19 @@
                                             </div>
                                         </div>
                                         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 mb-2">
-                                            <label for="validationCustom05">Tanggal Kembali</label>
+                                            <label for="validationCustom04">Tanggal Kembali</label>
                                             <!-- Date Picker -->
                                             <div class=" input-group date" id="" data-target-input="nearest">
                                                 <!-- input tgl kembali -->
-                                                <input name="tgl_kembali" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker41"  />
+                                                <input name="tgl_kembali" type="date" class="form-control datetimepicker-input" data-target="#datetimepicker4"/>
                                                 <!-- end input tgl kembali -->
-                                                <div class="input-group-append" data-target="#datetimepicker41" data-toggle="datetimepicker">
+                                                <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                 </div>
                                             </div>
                                             <!-- end date picker -->
                                             <div class="invalid-feedback">
-                                                Please provide a valid zip.
+                                                Please provide a valid state.
                                             </div>
                                         </div>
                                     </div>
@@ -200,15 +188,11 @@
                                             </label>
                                         </div>
                                         <?php } ?>
-                                        <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" name="id_pengikut" value="Terlampir"  class="custom-control-input"> <span class="custom-control-label">  Terlampir
-                                            <!-- end input pengikut -->
-                                            
                                         </div>
                                         <!-- end select pegawai -->
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group row">    
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Pembebanan Anggaran :</label>
                                     <div class="col-12 col-sm-10 col-lg-8">
                                         <!-- input Tempat -->
@@ -282,7 +266,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- Form Tambah Data Pegawai -->
-                    <form id="form" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'DataPegawai/tambah'; ?>" method="post">
+                    <form id="form" data-parsley-validate="" novalidate="" action="<?php echo base_url(). 'DataPegawai/tambah'; ?>" method="post" target="_blank">
                         <div class="form-group row">
                             <label for="inputEmail2" class="col-3 col-lg-2 col-form-label text-right">Nama</label>
                             <div class="col-9 col-lg-10">
@@ -331,4 +315,4 @@
         </div>
     </div>
     <!--End Modal Tambah Data -->
-    <!-- ================================================= -->
+    <!-- =================================================

@@ -46,11 +46,11 @@ class SPPD extends CI_Controller {
 
 		// echo base_url();
 
-		// header('Content-Type: application/vnd.ms-excel');
-		// header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
-		// header('Cache-Control: max-age=0');
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
 
-		$writer->save('output/'.$filename.'.xlsx');
+		$writer->save('php://output');
 	}
 
 	public function editExcel()
@@ -71,7 +71,7 @@ class SPPD extends CI_Controller {
 		$writer->save('output/kesbang.xlsx');
 	}
 
-	public function createPdf($kode_sppd,$no_sppd,$pejabat,$id_pegawai,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$instansi,$id_anggaran,$keterangan)
+	public function createPdf($kode_sppd,$no_sppd,$pejabat,$id_pegawai,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$tgl_surat,$id_pengikut,$instansi,$id_anggaran,$keterangan)
 	{
 		$this->load->library('Pdf');
 
@@ -198,7 +198,7 @@ EOD;
 		$pdf->Cell(95, 0,'4.   Maksud Perjalanan Dinas',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,$maksud,0, 1, 'L',false,'',0,false,'T','C');//Maksud perjalanan dinas (MultiCell)
 		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"Tasikmalaya di Pendopo Baru",0, 1, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
 		$pdf->Line(10,140.5,190,140.5,array(
 			'width' => 0.2
@@ -229,11 +229,11 @@ EOD;
 			'width' => 0.2
 		));
 		$pdf->Cell(95, 0,'7.     a.    Lamanya Perjalanan Dinas',0, 0, '',false,'',0,false,'T','M');
-		$pdf->Cell(95, 0,$lama_dinas,0, 1, 'L',false,'',0,false,'T','C');//Lama perjalanan
+		$pdf->Cell(95, 0,$lama_dinas.' 		hari',0, 1, 'L',false,'',0,false,'T','C');//Lama perjalanan
 		$pdf->Cell(95, 0,"        b.    Tanggal berangkat",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$tgl_berangkat,0, 1, 'L',false,'',0,false,'T','C');//Tanggal berangkat
+		$pdf->Cell(95, 0,$this->getTanggal($tgl_berangkat),0, 1, 'L',false,'',0,false,'T','C');//Tanggal berangkat
 		$pdf->Cell(95, 0,"        c.    Tanggal harus kembali",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$tgl_kembali,0, 1, 'L',false,'',0,false,'T','C');//Tanggal kembali
+		$pdf->Cell(95, 0,$this->getTanggal($tgl_kembali),0, 1, 'L',false,'',0,false,'T','C');//Tanggal kembali
 
 		$pdf->Line(10,174.5,190,174.5,array(
 			'width' => 0.2
@@ -259,14 +259,17 @@ EOD;
 		$pdf->Line(10,184,190,184,array(
 			'width' => 0.2
 		));
+
+		//Uraian anggaran
+		$anggaran = $this->CRUD->mread_anggaran($id_anggaran);
 		$pdf->Cell(95, 0,'9.   Pembebanan Anggaran',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"      a.   Instansi",0,	 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,$instansi,0, 1, 'L',false,'',0,false,'T','C');//Instansi pembebanan anggaran
 		$pdf->Cell(95, 0,"      b.   Mata Anggaran",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$id_anggaran,0, 1, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(95, 0,$anggaran[0]['uraian'],0, 1, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(95, 0,"",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"1.19.1.19.01. 15.05.5.2.2.15.01",0, 1, 'L',false,'',0,false,'T','C');//Mata anggaran
+		$pdf->Cell(95, 0,$anggaran[0]['kode_anggaran'],0, 1, 'L',false,'',0,false,'T','C');//Mata anggaran
 
 		$pdf->Line(10,203,190,203,array(
 			'width' => 0.2
@@ -292,7 +295,7 @@ EOD;
 
 		$pdf->Cell(105, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(35, 0,"Pada tanggal    : ",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(35, 0,"28 Mei 2016",0, 1, 'L',false,'',0,false,'T','C');	//Pada tanggal
+		$pdf->Cell(35, 0,$this->getTanggal($tgl_surat),0, 1, 'L',false,'',0,false,'T','C');	//Pada tanggal
 		
 		$pdf->Write(5,'','',false,'C',true);		
 		$pdf->Cell(85, 0,"",0, 0, 'L',false,'',0,false,'T','C');
@@ -564,6 +567,7 @@ EOD;
 		$lama_dinas = $data[0]['lama_dinas'];
 		$tgl_berangkat = $data[0]['tgl_berangkat'];
 		$tgl_kembali = $data[0]['tgl_kembali'];
+		$tgl_surat = $data[0]['tgl_surat'];
 		$id_pengikut = $data[0]['id_pengikut'];
 		$instansi = $data[0]['instansi'];
 		$id_anggaran = $data[0]['id_anggaran'];
@@ -707,7 +711,7 @@ EOD;
 		$pdf->Cell(95, 0,'4.   Maksud Perjalanan Dinas',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,$maksud,0, 1, 'L',false,'',0,false,'T','C');//Maksud perjalanan dinas (MultiCell)
 		$pdf->Cell(95, 0,"",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,"Tasikmalaya di Pendopo Baru",0, 1, 'L',false,'',0,false,'T','C');
+		$pdf->Cell(95, 0,"",0, 1, 'L',false,'',0,false,'T','C');
 
 		$pdf->Line(10,140.5,190,140.5,array(
 			'width' => 0.2
@@ -740,9 +744,9 @@ EOD;
 		$pdf->Cell(95, 0,'7.     a.    Lamanya Perjalanan Dinas',0, 0, '',false,'',0,false,'T','M');
 		$pdf->Cell(95, 0,$lama_dinas,0, 1, 'L',false,'',0,false,'T','C');//Lama perjalanan
 		$pdf->Cell(95, 0,"        b.    Tanggal berangkat",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$tgl_berangkat,0, 1, 'L',false,'',0,false,'T','C');//Tanggal berangkat
+		$pdf->Cell(95, 0,$this->getTanggal($tgl_berangkat),0, 1, 'L',false,'',0,false,'T','C');//Tanggal berangkat
 		$pdf->Cell(95, 0,"        c.    Tanggal harus kembali",0,	 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(95, 0,$tgl_kembali,0, 1, 'L',false,'',0,false,'T','C');//Tanggal kembali
+		$pdf->Cell(95, 0,$this->getTanggal($tgl_kembali),0, 1, 'L',false,'',0,false,'T','C');//Tanggal kembali
 
 		$pdf->Line(10,174.5,190,174.5,array(
 			'width' => 0.2
@@ -801,7 +805,7 @@ EOD;
 
 		$pdf->Cell(105, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(35, 0,"Pada tanggal    : ",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(35, 0,"28 Mei 2016",0, 1, 'L',false,'',0,false,'T','C');	//Pada tanggal
+		$pdf->Cell(35, 0,$this->getTanggal($tgl_surat),0, 1, 'L',false,'',0,false,'T','C');	//Pada tanggal
 		
 		$pdf->Write(5,'','',false,'C',true);		
 		$pdf->Cell(85, 0,"",0, 0, 'L',false,'',0,false,'T','C');
@@ -844,7 +848,7 @@ EOD;
 		$pdf->Cell(85, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(45, 0,"Pada tanggal",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(5, 0,":",0, 0, 'L',false,'',0,false,'T','C');
-		$pdf->Cell(30, 0,"28 Mei 2016",0, 1, 'L',false,'',0,false,'T','C');//Tanggal berangkat
+		$pdf->Cell(30, 0,$this->getTanggal($tgl_surat),0, 1, 'L',false,'',0,false,'T','C');//Tanggal berangkat
 
 		$pdf->Cell(85, 0,"",0, 0, 'L',false,'',0,false,'T','C');
 		$pdf->Cell(45, 0,"Ke",0, 0, 'L',false,'',0,false,'T','C');
@@ -1074,56 +1078,87 @@ EOD;
 		echo $result['nama'];
 	}
 
+	public function getTanggal($date){
+		//Hari
+		$tanggal = new DateTime($date);
+		$hari = $tanggal->format("l");
+		switch ($hari) {
+			case 'Sunday':
+				$hari = "Minggu";
+				break;
+			case 'Monday':
+				$hari = "Senin";
+				break;
+			case 'Tuesday':
+				$hari = "Selasa";
+				break;
+			case 'Wednesday':
+				$hari = "Rabu";
+				break;
+			case 'Thursday':
+				$hari = "Kamis";
+				break;
+			case 'Friday':
+				$hari = "Jumat";
+				break;
+			case 'Saturday':
+				$hari = "Sabtu";
+				break;
+		}
 
-	public function tambahSPPD(){
+		//Bulan
+		$bulan = $tanggal->format("F");
+		switch ($bulan) {
+			case 'Sunday':
+				$bulan = "Minggu";
+				break;
+			case 'Monday':
+				$bulan = "Senin";
+				break;
+			case 'Tuesday'	:
+				$bulan = "Selasa";
+				break;
+			case 'Wednesday':
+				$bulan = "Rabu";
+				break;
+			case 'Thursday':
+				$bulan = "Kamis";
+				break;
+			case 'Friday':
+				$bulan = "Jumat";
+				break;
+			case 'Saturday':
+				$bulan = "Sabtu";
+				break;
+		}
 
-		// $this->load->model('CRUD','crud',TRUE);
-		// $input_data_lain = array();
-		// //$input_pengikut= array();
+		//Tanggal-Tahun
+		$tanggal = $tanggal->format("j");
+		$tahun = explode("-", $date);
 
-		// $input_data_lain['pejabat'] 		= $this->input->post('pejabat');
-		// $input_data_lain['id_pegawai'] 		= $this->input->post('id_pegawai');
-		// $input_data_lain['maksud'] 			= $this->input->post('maksud');
-		// $input_data_lain['alat_angkut'] 	= $this->input->post('alat_angkut');
-		// $input_data_lain['tempat_berangkat'] = $this->input->post('tempat_berangkat');
-		// $input_data_lain['tempat_tujuan'] 	= $this->input->post('tempat_tujuan');
-		// $input_data_lain['lama_dinas'] 		= $this->input->post('lama_dinas');
-		// $input_data_lain['tgl_berangkat'] 	= $this->input->post('tgl_berangkat');
-		// $input_data_lain['tgl_kembali'] 	= $this->input->post('tgl_kembali');
-		// //pengikut
-		// //$input_pengikut['id_pengikut'] 		=  $this->input->post('id_pengikut[]');
-		// $pengikut 							=$this->input->post('id_pengikut[]');
-		// //
-		
-		// $input_data_lain['instansi'] 		= $this->input->post('instansi');
-		// //anggaran
-		// $input_data_lain['id_anggaran'] 	= $this->input->post('id_anggaran');
-		// //
-		// $input_data_lain['keterangan'] 		= $this->input->post('keterangan');
-		// $input_data_lain['no_sppd'] 		= $this->input->post('no_sppd');
-		// $input_data_lain['kode_sppd'] 		= $this->input->post('kode_sppd');
-		// $input_data_lain['tingkat'] 		= $this->input->post('tingkat');
-		// //print_r($input_pengikut);
-		// //print_r($pengikut);
-		// $checking_insert = $this->crud->multiple_insert_SPPD($input_data_lain, $pengikut);
-		// if ($checking_insert) {
-		// 	//kalo sukse
-		// 	redirect(base_url('SPPD/index'));
-		// 	//print_r($checking_insert);
-		// } 
-		//var_dump($input_data_lain);
-		//var_dump($input_pengikut);
-		
+		return $hari.", ".$tanggal." ".$bulan." ".$tahun[0];
+
+	}
+
+	public function tambahSPPD(){		
 		$pejabat = $this->input->post('pejabat');
 		$id_pegawai = $this->input->post('id_pegawai');
 		$maksud = $this->input->post('maksud');
 		$alat_angkut = $this->input->post('alat_angkut');
 	 	$tempat_berangkat = $this->input->post('tempat_berangkat');
 		$tempat_tujuan = $this->input->post('tempat_tujuan');
-		$lama_dinas = $this->input->post('lama_dinas');
+
 		$tgl_berangkat = $this->input->post('tgl_berangkat');
 		$tgl_kembali = $this->input->post('tgl_kembali'); 
-		
+		$tgl_surat = date("Y-m-d",time());
+		// date_default_timezone_set(timezone_identifier);
+		//Lama dinas
+		$berangkat = new DateTime($tgl_berangkat);
+		$kembali = new DateTime($tgl_kembali);
+				
+		$lama_dinas = $berangkat->diff($kembali);
+		$lama_dinas = $lama_dinas->days;
+
 		$beban_anggaran = $this->input->post('beban_anggaran');
 		$instansi = $this->input->post('instansi');
 		$id_anggaran = $this->input->post('id_anggaran');
@@ -1146,6 +1181,7 @@ EOD;
 			'lama_dinas' => $lama_dinas,
 			'tgl_berangkat' => $tgl_berangkat,
 			'tgl_kembali'	 => $tgl_kembali,
+			'tgl_surat'	 => $tgl_surat,
 			'id_pengikut' => $id_pengikut,
 			'instansi' => $instansi,
 			'id_anggaran' => $id_anggaran,
@@ -1157,8 +1193,7 @@ EOD;
 		
 		// print_r($data);
 		$this->CRUD->input_sppd($data); 
-		$this->createPdf($kode_sppd,$no_sppd,$pejabat,$id_pegawai,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$id_pengikut,$instansi,$id_anggaran,$keterangan);
-
+		// $this->createPdf($kode_sppd,$no_sppd,$pejabat,$id_pegawai,$tingkat,$maksud,$alat_angkut,$tempat_berangkat,$tempat_tujuan,$lama_dinas,$tgl_berangkat,$tgl_kembali,$tgl_surat,$id_pengikut,$instansi,$id_anggaran,$keterangan);
 		// redirect('Excel/buatsurat');
 	}	
 
@@ -1166,6 +1201,8 @@ EOD;
 		$this->CRUD->mhapus_sppd($id);
 		redirect('SPPD/history');
 	}	
+
+	
 	
 }
 

@@ -42,6 +42,7 @@ foreach($anggaran as $a) {
        
         <td style="width: 120px;">
                 <a href="<?php echo base_url("Laporan/genLaporan/{$a['id_anggaran']}") ?>">Lihat Laporan</i> </a>
+                <a href="<?php echo base_url("Laporan/createExcel/{$a['id_anggaran']}") ?>">Excel</i> </a>
         </td>        
     </tr>
 <?php $no++;} ?>
