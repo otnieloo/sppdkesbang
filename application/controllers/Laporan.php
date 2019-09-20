@@ -33,7 +33,7 @@ class Laporan extends CI_Controller {
 	{
 		$this->load->view('part/head');
 		$this->load->view('part/sidebar');
-		$this->load->view('lap_keseluruhan');
+		$this->load->view('lap_kegiatan_keseluruhan');
 		$this->load->view('part/footer.php');
 	}
 
@@ -275,7 +275,7 @@ class Laporan extends CI_Controller {
 					
 					$pegawai = $this->CRUD->read_pegawai($s['id_pegawai']);	
 
-					//Gaji
+					//Gaj*i
 					
 					$abc = array("a","b","c","d");
 					$golongan = str_replace($abc, "", $pegawai[0]['golongan']);
@@ -485,7 +485,7 @@ class Laporan extends CI_Controller {
 			$sheet->setCellValue('B4',"Kegiatan $uraian");
 			$sheet->setCellValue('B5','Kantor Kesbang dan Linmas');
 			$sheet->setCellValue('B6','Tahun Anggaran 2019');
-			$sheet->setCellValue('B9',"$kode_anggaran");
+			$sheet->setCellValue('B8',"$kode_anggaran");
 
 			$sheet->setCellValue('B10','No');
 			$sheet->setCellValue('C10','Nama/NIP');
@@ -514,6 +514,7 @@ class Laporan extends CI_Controller {
 			foreach($sppd as $s) { 
 				$pegawai = $this->CRUD->read_pegawai($s['id_pegawai']);
 				$z = $x;
+				$total = array();
 
 				$nama = $pegawai[0]['nama'];
 				$id_pegawai = $s['id_pegawai'];
@@ -524,11 +525,18 @@ class Laporan extends CI_Controller {
 				$maksud = $s['maksud'];
 				$tempat_tujuan = $s['tempat_tujuan'];
 
+				$abc = array("a","b","c","d");
+				$golongan = str_replace($abc, "", $pegawai[0]['golongan']);
+				$golongan = str_replace("/", "", $golongan);
+				$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
+				$gaji = $this->gaji($wil,$golongan);
+				array_push($total, $gaji);
+
 				$sheet->setCellValue("B$x","$i");
 				$sheet->setCellValue("C$x","$nama \n $id_pegawai");
 				$sheet->setCellValue("D$x","$pangkat / $golongan");
 				$sheet->setCellValue("E$x","$jabatan");
-				$sheet->setCellValue("F$x",'Rp. 85.000,-');
+				$sheet->setCellValue("F$x","$gaji");
 				$sheet->setCellValue("G$x","$tgl_surat");
 				$sheet->setCellValue("H$x","$maksud");
 				$sheet->setCellValue("I$x","$tempat_tujuan");
@@ -536,12 +544,28 @@ class Laporan extends CI_Controller {
 				$sheet->setCellValue("K$x",'asal surat');
 				
 				$y = 2;
-				for ($j=0; $j < $y; $j++) { 
+				$id_pengikut = explode(",", $s['id_pengikut']);
+
+				foreach ($id_pengikut as $p) {
+					$pengikut = $this->CRUD->read_pegawai($p);
+					$nama = $pengikut[0]['nama'];
+					$nip = $p;
+					$pangkat = $pengikut[0]['pangkat'];
+					$golongan = $pengikut[0]['golongan'];
+					$jabatan = $pengikut[0]['jabatan'];
+
+					$abc = array("a","b","c","d");
+					$golongan = str_replace($abc, "", $pengikut[0]['golongan']);
+					$golongan = str_replace("/", "", $golongan);
+					$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
+					$gaji = $this->gaji($wil,$golongan);
+					array_push($total, $gaji);
+
 					$x++;
-					$sheet->setCellValue("C$x","Suparto, S.IP \n NIP. 123123");
-					$sheet->setCellValue("D$x",'Penata Tk.I/III/d');
-					$sheet->setCellValue("E$x",'Kasi HAL dan PMA');
-					$sheet->setCellValue("F$x",'Rp. 85.000,-');
+					$sheet->setCellValue("C$x","$nama \n $id_pegawai");
+					$sheet->setCellValue("D$x","$pangkat / $golongan");
+					$sheet->setCellValue("E$x","$jabatan");
+					$sheet->setCellValue("F$x","$gaji");
 				}
 				
 				$sheet->mergeCells("B$z:B$x");
@@ -549,18 +573,21 @@ class Laporan extends CI_Controller {
 				$sheet->mergeCells("H$z:H$x");
 				$sheet->mergeCells("I$z:I$x");
 				$sheet->mergeCells("J$z:J$x");
+			
 				$sheet->mergeCells("K$z:K$x");
+
+				$sheet->getStyle("B10:K$x")->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+				$sheet->getStyle("B10:K$x")->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+				$sheet->getStyle("B10:K$x")->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+				$sheet->getStyle("B10:K$x")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+				$sheet->getStyle("B10:K$x")->getBorders()->getInside()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
 
 				$x+=$y;$i++;
 			}
-			
-			
 
 			$sheet->getStyle('B10:K1000')->getAlignment()->setHorizontal('center');
 			$sheet->getStyle('B10:K1000')->getAlignment()->setVertical('center');
 			$sheet->getStyle('B10:K1000')->getAlignment()->setWrapText(true);
-
-
 
 			$writer = new Xlsx($spreadsheet);
 
@@ -575,5 +602,168 @@ class Laporan extends CI_Controller {
 			$writer->save('php://output');
 		}
 	
+		public function createExcelAll()
+		{
+			$spreadsheet = new Spreadsheet();
+			$sheet = $spreadsheet->getActiveSheet();
+						
+			$sheet->getColumnDimension('B')->setWidth(3.5);
+			$sheet->getColumnDimension('C')->setWidth(21.5);
+			$sheet->getColumnDimension('D')->setWidth(16.5);
+			$sheet->getColumnDimension('E')->setWidth(15);
+			$sheet->getColumnDimension('F')->setWidth(13);
+			$sheet->getColumnDimension('G')->setWidth(11);
+			$sheet->getColumnDimension('H')->setWidth(16);
+			$sheet->getColumnDimension('I')->setWidth(18);
+			$sheet->getColumnDimension('J')->setWidth(13);
+			$sheet->getColumnDimension('K')->setWidth(11);
+			$sheet->getColumnDimension('L')->setWidth(11);
+			$sheet->getColumnDimension('M')->setWidth(11);
+			$sheet->getColumnDimension('N')->setWidth(11);
+
+			$sheet->setCellValue('B10','No');
+			$sheet->setCellValue('C10','No SPPD');
+			$sheet->setCellValue('D10','Nama Peserta SPPD');
+			$sheet->setCellValue('E10','Tanggal Surat');
+			$sheet->setCellValue('F10','Tanggal Berangkat');
+			$sheet->setCellValue('G10','Tanggal Kembali');
+			$sheet->setCellValue('H10','No BKU');
+			$sheet->setCellValue('I10','Tujuan');
+			$sheet->setCellValue('J10','Transport');
+			$sheet->setCellValue('K10','Lumsum');
+			$sheet->setCellValue('L10','Total');
+			$sheet->setCellValue('M10','Sumber Kegiatan');
+			$sheet->setCellValue('N10','Keterangan');
+			$sheet->setCellValue('B11','1');
+			$sheet->setCellValue('C11','2');
+			$sheet->setCellValue('D11','3');
+			$sheet->setCellValue('E11','4');
+			$sheet->setCellValue('F11','5');
+			$sheet->setCellValue('G11','6');
+			$sheet->setCellValue('H11','7');
+			$sheet->setCellValue('I11','8');
+			$sheet->setCellValue('J11','9');
+			$sheet->setCellValue('K11','10');
+			$sheet->setCellValue('L11','11');
+			$sheet->setCellValue('M11','12');
+			$sheet->setCellValue('N11','13');
+
+			//Kegiatan
+			$kegiatan = $this->CRUD->mread_anggaran();
+			$x = 12;
+			$total = array();
+			foreach ($kegiatan as $k) {
+				$sppd = $this->CRUD->getSppdAnggaran($k['id_anggaran']);
+				if (empty($sppd)) {
+					continue;
+				}else{
+					//SPPD
+					$sheet->setCellValue("B$x",$k['uraian']);
+					$sheet->mergeCells("B$x:F$x");
+					$no = 1;
+					foreach ($sppd as $s) {
+
+						$x++;
+						$z = $x;
+
+						$pegawai = $this->CRUD->read_pegawai($s['id_pegawai']);
+
+						//menghitung total gaji pengikut
+						$pengikut = explode(',',$s['id_pengikut']);
+						$peng = array();
+						foreach($pengikut as $p){
+							array_push($peng, $p);
+						};	
+						foreach($peng as $p) {
+							$pegawai = $this->CRUD->read_pegawai($p);
+							$abc = array("a","b","c","d");		
+							$golongan = str_replace($abc, "", $pegawai[0]['golongan']);
+							$golongan = str_replace("/", "", $golongan);
+							$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
+							$gaji = $this->gaji($wil,$golongan);
+							array_push($total,$gaji);
+						}
+
+						$abc = array("a","b","c","d");
+						$golongan = str_replace($abc, "", $pegawai[0]['golongan']);
+						$golongan = str_replace("/", "", $golongan);
+						$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
+						$gaji = $this->gaji($wil,$golongan);
+						array_push($total, $gaji);
+
+						$sheet->setCellValue("B$x","$no");
+						$sheet->setCellValue("C$x",$s['no_sppd']);
+						$sheet->setCellValue("D$x",$pegawai[0]['nama']);
+						$sheet->setCellValue("E$x",$s['tgl_surat']);
+						$sheet->setCellValue("F$x",$s['tgl_berangkat']);
+						$sheet->setCellValue("G$x",$s['tgl_kembali']);
+						$sheet->setCellValue("H$x","NO BKU");
+						$sheet->setCellValue("I$x",$s['tempat_tujuan']);
+						$sheet->setCellValue("J$x","Transport");
+						$sheet->setCellValue("K$x","$gaji");
+						$sheet->setCellValue("L$x",array_sum($total));
+						$sheet->setCellValue("M$x","APBD KOTA TASIKMALAYA");
+						$sheet->setCellValue("N$x",$s['keterangan']);
+
+
+						$id_pengikut = explode(",", $s['id_pengikut']);
+						foreach ($id_pengikut as $p) {
+							$pengikut = $this->CRUD->read_pegawai($p);
+							$nama = $pengikut[0]['nama'];
+
+							$abc = array("a","b","c","d");
+							$golongan = str_replace($abc, "", $pengikut[0]['golongan']);
+							$golongan = str_replace("/", "", $golongan);
+							$wil = substr($s['tingkat'],0,1).substr($s['tingkat'], -1);
+							$gaji = $this->gaji($wil,$golongan);
+							// array_push($total, $gaji);
+
+							$x++;
+							$sheet->setCellValue("D$x","$nama");
+							$sheet->setCellValue("K$x","$gaji");
+						}
+
+						$sheet->mergeCells("B$z:B$x");
+						$sheet->mergeCells("C$z:C$x");
+						$sheet->mergeCells("E$z:E$x");
+						$sheet->mergeCells("F$z:F$x");
+						$sheet->mergeCells("G$z:G$x");
+						$sheet->mergeCells("H$z:H$x");
+						$sheet->mergeCells("I$z:I$x");
+						$sheet->mergeCells("J$z:J$x");
+						$sheet->mergeCells("L$z:L$x");
+						$sheet->mergeCells("M$z:M$x");
+						$sheet->mergeCells("N$z:N$x");
+
+						$sheet->getStyle("B10:N$x")->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+						$sheet->getStyle("B10:N$x")->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+						$sheet->getStyle("B10:N$x")->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+						$sheet->getStyle("B10:N$x")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+						$sheet->getStyle("B10:N$x")->getBorders()->getInside()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+
+						$no++;
+						$total = array();
+					}
+
+					$x++;
+				}
+			}
+
+			$sheet->getStyle('B10:N1000')->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('B10:N1000')->getAlignment()->setVertical('center');
+			$sheet->getStyle('B10:N1000')->getAlignment()->setWrapText(true);
+
+			$writer = new Xlsx($spreadsheet);
+
+			$filename = 'contoh';
+
+			// echo base_url();
+
+			header('Content-Type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
+			header('Cache-Control: max-age=0');
+
+			$writer->save('php://output');
+		}
 }
 ?>

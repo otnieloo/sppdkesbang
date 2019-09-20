@@ -192,7 +192,7 @@
                             </li>
                              </li>
                             <li class="nav-item">
-                                <a class="nav-link <?=($this->uri->segment('1')=='LaporanKeseluruhan' && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>Laporan/genlaporankel" title="DataAnggaran" ><i class="far fa-money-bill-alt"></i>Rekap Laporan Keseluruhan<span class="badge badge-success">6</span></a>
+                                <a class="nav-link <?=($this->uri->segment('1')=='LaporanKeseluruhan' && $this->uri->segment('2')=='index')?'active':''?>" href="<?=base_url()?>Laporan/keseluruhan" title="DataAnggaran" ><i class="far fa-money-bill-alt"></i>Rekap Laporan Keseluruhan<span class="badge badge-success">6</span></a>
                                 
                             </li>
                            

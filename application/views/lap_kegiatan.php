@@ -41,8 +41,8 @@ foreach($anggaran as $a) {
         <td><?php echo $a['kode_anggaran']; ?></td>
        
         <td style="width: 120px;">
-                <a href="<?php echo base_url("Laporan/genLaporan/{$a['id_anggaran']}") ?>">Lihat Laporan</i> </a>
-                <a href="<?php echo base_url("Laporan/createExcel/{$a['id_anggaran']}") ?>">Excel</i> </a>
+                <a href="<?php echo base_url("Laporan/genLaporan/{$a['id_anggaran']}") ?>"><i class="fa fa-file-pdf-o fa-2x"></i>PDF </a>
+                <a href="<?php echo base_url("Laporan/createExcel/{$a['id_anggaran']}") ?>"><i class="fa fa-file-excel-o fa-2x mx-1"></i>Excel </a>
         </td>        
     </tr>
 <?php $no++;} ?>
